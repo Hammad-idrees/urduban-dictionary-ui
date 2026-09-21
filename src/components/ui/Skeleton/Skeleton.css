@@ -1,0 +1,43 @@
+/* ==========================================================================
+   Skeleton  (BEM block: .skeleton)
+   ========================================================================== */
+
+.skeleton {
+  display: block;
+  border-radius: var(--radius-sm);
+
+  /*
+    The shimmer is one wide gradient slid across an oversized background box.
+    Animating background-position rather than a child element's transform keeps
+    this to a single element with no extra DOM.
+  */
+  background-image: linear-gradient(
+    90deg,
+    #e9edf3 25%,
+    #f5f7fa 37%,
+    #e9edf3 63%
+  );
+  background-size: 400% 100%;
+  animation: skeleton-shimmer 1.4s ease infinite;
+}
+
+@keyframes skeleton-shimmer {
+  from {
+    background-position: 100% 50%;
+  }
+  to {
+    background-position: 0 50%;
+  }
+}
+
+/*
+  The global reduced-motion block already collapses animation-duration, which
+  would freeze the shimmer mid-gradient at an arbitrary position. Pinning the
+  background here makes the frozen state a flat, even grey instead.
+*/
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    background-image: none;
+    background-color: #e9edf3;
+  }
+}

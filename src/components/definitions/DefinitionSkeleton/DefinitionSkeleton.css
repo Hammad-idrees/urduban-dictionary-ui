@@ -1,0 +1,49 @@
+/* ==========================================================================
+   Definition skeleton  (BEM block: .definition-skeleton)
+   Mirrors .definition so the layout does not shift when real content lands.
+   ========================================================================== */
+
+.definition-skeleton__block {
+  padding-block: clamp(var(--space-lg), 3.5vw, var(--space-2xl));
+}
+
+.definition-skeleton__block:not(:last-child) {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+}
+
+.definition-skeleton__heading {
+  margin-bottom: clamp(var(--space-sm), 1.5vw, var(--space-md));
+}
+
+/* Same grid as .definition__columns, so the two match width for width. */
+.definition-skeleton__columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(var(--space-lg), 6vw, var(--space-3xl));
+  align-items: start;
+}
+
+.definition-skeleton__lines {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+/*
+  Staggering the animation across blocks stops the whole column pulsing in
+  lockstep, which reads as a single flashing panel rather than loading text.
+*/
+.definition-skeleton__block:nth-child(2) .skeleton {
+  animation-delay: 0.15s;
+}
+
+.definition-skeleton__block:nth-child(3) .skeleton {
+  animation-delay: 0.3s;
+}
+
+@media (max-width: 768px) {
+  .definition-skeleton__columns {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+}

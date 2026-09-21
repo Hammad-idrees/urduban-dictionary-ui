@@ -37,10 +37,10 @@ src/
 ├── components/
 │   ├── layout/        # Header (with mobile drawer), Footer
 │   ├── search/        # SearchPanel, SearchBar, LanguageSelector
-│   ├── definitions/   # DefinitionSection (bilingual columns)
+│   ├── definitions/   # DefinitionSection, ExampleSentences, DefinitionSkeleton
 │   ├── sidebar/       # AppDownloadCard, PromoCarousel, OtherWordsCard
 │   ├── commonWords/   # CommonWordsCarousel, WordCard
-│   └── ui/            # Card, ReadingProgress, ScrollToTop
+│   └── ui/            # Card, Skeleton, ReadingProgress, ScrollToTop
 ├── data/              # dictionary entries and navigation links
 ├── hooks/             # useScrollReveal, useMediaQuery, useClickOutside
 ├── styles/            # variables.css, reset.css, global.css
@@ -62,6 +62,9 @@ component and its styles move or get deleted together.
   and an explicit pause control
 - Clickable related words that trigger a new lookup
 - Explicit empty state when a search returns no match
+- Skeleton placeholders while a lookup resolves, shaped to match the real
+  content so nothing reflows when it arrives
+- Worked example sentences for each entry, English above Urdu
 - Scroll reveal animations, reading progress bar, back to top control
 
 ## Implementation notes
@@ -77,8 +80,10 @@ each breakpoint, which keeps media queries limited to layout changes.
 and a handful of consumers, a context or store would add indirection without
 removing meaningful prop passing.
 
-**Data layer.** `src/data/dictionary.js` is shaped like an API response. Swapping
-it for a real `fetch` call does not require component changes.
+**Data layer.** `src/data/dictionary.js` is shaped like an API response, and
+every lookup already goes through an async boundary in `App.jsx` with a loading
+state around it. Swapping the local data for a real `fetch` is a change to one
+function, with no component or markup changes.
 
 **Bilingual text.** Urdu content carries `lang="ur"` and `dir="rtl"`. Inter has
 no Urdu glyphs, so Noto Naskh Arabic is loaded separately. Without it the

@@ -55,6 +55,20 @@ export const dictionary = [
       { english: 'welcome home', urdu: 'گھر آمد مبارک' },
       { english: 'a welcome change', urdu: 'خوشگوار تبدیلی' },
     ],
+    examples: [
+      {
+        english: 'They gave us a warm welcome at the airport.',
+        urdu: 'انہوں نے ایئرپورٹ پر ہمارا پرتپاک استقبال کیا۔',
+      },
+      {
+        english: 'You are always welcome in our home.',
+        urdu: 'ہمارے گھر میں آپ کا ہمیشہ خیرمقدم ہے۔',
+      },
+      {
+        english: 'She welcomed the new students with a smile.',
+        urdu: 'اس نے نئے طلبہ کا مسکرا کر استقبال کیا۔',
+      },
+    ],
   },
 
   {
@@ -84,6 +98,20 @@ export const dictionary = [
       { english: 'book a room', urdu: 'کمرہ محفوظ کرانا' },
       { english: 'a good read', urdu: 'عمدہ کتاب' },
       { english: 'close the book', urdu: 'باب ختم کرنا' },
+    ],
+    examples: [
+      {
+        english: 'I borrowed this book from the library.',
+        urdu: 'میں نے یہ کتاب لائبریری سے مستعار لی۔',
+      },
+      {
+        english: 'Please book a table for two.',
+        urdu: 'براہ کرم دو افراد کے لیے میز محفوظ کرا دیں۔',
+      },
+      {
+        english: 'He wrote his first book at twenty.',
+        urdu: 'اس نے اپنی پہلی کتاب بیس سال کی عمر میں لکھی۔',
+      },
     ],
   },
 
@@ -116,6 +144,20 @@ export const dictionary = [
       { english: 'happy hour', urdu: 'رعایتی گھڑی' },
       { english: 'perfectly happy', urdu: 'مکمل مطمئن' },
     ],
+    examples: [
+      {
+        english: 'She was happy to hear the good news.',
+        urdu: 'وہ اچھی خبر سن کر خوش ہوئی۔',
+      },
+      {
+        english: 'They lived a happy life together.',
+        urdu: 'انہوں نے مل کر خوشگوار زندگی گزاری۔',
+      },
+      {
+        english: 'I am happy with the result.',
+        urdu: 'میں نتیجے سے مطمئن ہوں۔',
+      },
+    ],
   },
 
   {
@@ -145,6 +187,20 @@ export const dictionary = [
       { english: 'test the waters', urdu: 'صورتحال جانچنا' },
       { english: 'fresh water', urdu: 'میٹھا پانی' },
       { english: 'water the plants', urdu: 'پودوں کو پانی دینا' },
+    ],
+    examples: [
+      {
+        english: 'Please bring me a glass of water.',
+        urdu: 'براہ کرم مجھے ایک گلاس پانی لا دیں۔',
+      },
+      {
+        english: 'The farmer waters his crops every morning.',
+        urdu: 'کسان ہر صبح اپنی فصلوں کو پانی دیتا ہے۔',
+      },
+      {
+        english: 'The water in this river is very clean.',
+        urdu: 'اس دریا کا پانی بہت صاف ہے۔',
+      },
     ],
   },
 
@@ -181,6 +237,20 @@ export const dictionary = [
       { english: 'make friends', urdu: 'دوست بنانا' },
       { english: 'close friend', urdu: 'قریبی دوست' },
       { english: 'friendly advice', urdu: 'دوستانہ مشورہ' },
+    ],
+    examples: [
+      {
+        english: 'He is my closest friend.',
+        urdu: 'وہ میرا سب سے قریبی دوست ہے۔',
+      },
+      {
+        english: 'She made new friends at school.',
+        urdu: 'اس نے اسکول میں نئے دوست بنائے۔',
+      },
+      {
+        english: 'A true friend helps in hard times.',
+        urdu: 'سچا دوست مشکل وقت میں کام آتا ہے۔',
+      },
     ],
   },
 ];
