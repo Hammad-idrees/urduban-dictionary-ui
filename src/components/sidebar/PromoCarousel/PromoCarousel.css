@@ -1,0 +1,145 @@
+/* ==========================================================================
+   Sidebar promo carousel  (BEM block: .promo)
+   Figma: 454px wide creative above a #f8b318 call to action
+   ========================================================================== */
+
+.promo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+/* ---------- Viewport ---------- */
+
+.promo__viewport {
+  /* Clips the off-screen slides. Without it the track just overflows and all
+     three creatives stay visible. */
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  /* Holds the design's slot proportions and reserves the box before the first
+     image decodes, so the sidebar never jumps (no layout shift). */
+  aspect-ratio: 454 / 569;
+}
+
+.promo__track {
+  display: flex;
+  height: 100%;
+  /* --index is set inline by the component. Each slide is exactly one
+     viewport wide and there is no gutter, so one step is a flat 100%. */
+  transform: translateX(calc(var(--index) * -100%));
+  transition: transform var(--duration-slow) var(--ease-in-out);
+}
+
+/*
+  flex-basis 100% with no grow or shrink: the slides must stay exactly one
+  viewport wide, otherwise the translate above lands between two creatives.
+*/
+.promo__slide {
+  flex: 0 0 100%;
+  height: 100%;
+}
+
+.promo__slide img {
+  width: 100%;
+  height: 100%;
+  /* The creatives are 2:3 but the slot is slightly wider, so cover crops a
+     little off the top and bottom rather than distorting the artwork. */
+  object-fit: cover;
+}
+
+/* ---------- Controls ---------- */
+
+.promo__controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  /* Anchor for the pause toggle. It is taken out of flow and pinned right so
+     the dots stay centred on the card rather than being pushed off-centre by
+     the toggle's width. */
+  position: relative;
+}
+
+.promo__dots {
+  display: flex;
+  gap: var(--space-xs);
+}
+
+.promo__dot {
+  width: 9px;
+  height: 9px;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-track);
+  transition:
+    background-color var(--duration-fast) var(--ease-in-out),
+    width var(--duration-base) var(--ease-out),
+    transform var(--duration-base) var(--ease-out);
+}
+
+.promo__dot:hover {
+  transform: scale(1.25);
+}
+
+/* The active dot stretches into a pill, so position is readable without
+   relying on the colour change alone. */
+.promo__dot--active {
+  width: 24px;
+  background-color: var(--color-primary);
+}
+
+.promo__toggle {
+  position: absolute;
+  right: 0;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--radius-pill);
+  color: var(--color-text-soft);
+  opacity: 0.65;
+  transition:
+    opacity var(--duration-fast) var(--ease-in-out),
+    background-color var(--duration-fast) var(--ease-in-out);
+}
+
+.promo__toggle:hover,
+.promo__toggle:focus-visible {
+  opacity: 1;
+  background-color: var(--color-surface-muted);
+}
+
+.promo__toggle svg {
+  width: 13px;
+  height: 13px;
+}
+
+/* ---------- Call to action ---------- */
+
+.promo__cta {
+  display: block;
+  padding: var(--space-md);
+  background-color: var(--color-accent);
+  color: var(--color-text);
+  font-size: var(--fs-cta);
+  font-weight: var(--fw-bold);
+  text-align: center;
+  text-transform: uppercase;
+  /* Compensates for the loss of lowercase letterforms, which otherwise makes
+     all-caps text feel cramped. */
+  letter-spacing: 0.02em;
+  border-radius: var(--radius-sm);
+  transition:
+    background-color var(--duration-fast) var(--ease-in-out),
+    transform var(--duration-base) var(--ease-out);
+}
+
+.promo__cta:hover,
+.promo__cta:focus-visible {
+  background-color: var(--color-accent-dark);
+  transform: translateY(-2px);
+}
+
+/* Presses in on click, so the button feels physical. */
+.promo__cta:active {
+  transform: translateY(0);
+}

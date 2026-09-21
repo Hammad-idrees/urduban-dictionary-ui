@@ -4,7 +4,7 @@ import { Footer } from './components/layout/Footer/Footer';
 import { SearchPanel } from './components/search/SearchPanel/SearchPanel';
 import { DefinitionSection } from './components/definitions/DefinitionSection/DefinitionSection';
 import { AppDownloadCard } from './components/sidebar/AppDownloadCard/AppDownloadCard';
-import { PromoAd } from './components/sidebar/PromoAd/PromoAd';
+import { PromoCarousel } from './components/sidebar/PromoCarousel/PromoCarousel';
 import { OtherWordsCard } from './components/sidebar/OtherWordsCard/OtherWordsCard';
 import { CommonWordsCarousel } from './components/commonWords/CommonWordsCarousel/CommonWordsCarousel';
 import { ReadingProgress } from './components/ui/ReadingProgress/ReadingProgress';
@@ -134,7 +134,7 @@ export default function App() {
 
           <aside className="layout__sidebar" aria-label="Related content">
             <AppDownloadCard />
-            <PromoAd />
+            <PromoCarousel />
             <OtherWordsCard words={entry.relatedWords} onWordSelect={handleSearch} />
           </aside>
         </div>

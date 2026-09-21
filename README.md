@@ -38,7 +38,7 @@ src/
 │   ├── layout/        # Header (with mobile drawer), Footer
 │   ├── search/        # SearchPanel, SearchBar, LanguageSelector
 │   ├── definitions/   # DefinitionSection (bilingual columns)
-│   ├── sidebar/       # AppDownloadCard, PromoAd, OtherWordsCard
+│   ├── sidebar/       # AppDownloadCard, PromoCarousel, OtherWordsCard
 │   ├── commonWords/   # CommonWordsCarousel, WordCard
 │   └── ui/            # Card, ReadingProgress, ScrollToTop
 ├── data/              # dictionary entries and navigation links
@@ -58,6 +58,8 @@ component and its styles move or get deleted together.
 - Language selector with a swap control that reorders the English and Urdu
   columns
 - Paged carousel of common phrases with dismissible cards
+- Auto-rotating sidebar ad carousel that pauses on hover and focus, with dots
+  and an explicit pause control
 - Clickable related words that trigger a new lookup
 - Explicit empty state when a search returns no match
 - Scroll reveal animations, reading progress bar, back to top control
