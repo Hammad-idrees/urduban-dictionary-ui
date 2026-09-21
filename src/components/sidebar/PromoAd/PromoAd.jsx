@@ -1,9 +1,14 @@
-import promoImage from '../../../assets/images/ad-email-automation.png';
+import promoImage from '../../../assets/images/ad-email-automation.webp';
 import './PromoAd.css';
 
 /**
- * Sponsored placement in the sidebar: image, headline, and a yellow CTA.
+ * Sponsored placement in the sidebar: creative plus a yellow CTA.
  * Figma: 454px wide image, #f8b318 call-to-action bar.
+ *
+ * The headline is part of the ad creative itself, so it is NOT repeated as a
+ * heading element - that would show the same sentence twice on screen and read
+ * it out twice to a screen reader. The wording lives in the image's alt text
+ * instead, which is the only copy assistive tech needs.
  */
 export function PromoAd() {
   return (
@@ -11,14 +16,12 @@ export function PromoAd() {
       <div className="promo__media">
         <img
           src={promoImage}
-          alt="A phone showing unread email notifications"
-          width="454"
-          height="569"
+          alt="Sponsored: want to automate your emails?"
+          width="908"
+          height="1362"
           loading="lazy"
         />
       </div>
-
-      <h2 className="promo__headline">Want to automate your emails?</h2>
 
       {/*
         An <a> rather than a <button>: this navigates to the advertiser, and

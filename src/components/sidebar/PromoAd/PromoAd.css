@@ -5,6 +5,9 @@
 .promo {
   display: flex;
   flex-direction: column;
+  /* The headline used to supply this spacing. It now lives inside the creative,
+     so the gap has to be declared here instead. */
+  gap: var(--space-md);
 }
 
 .promo__media {
@@ -25,14 +28,6 @@
 
 .promo:hover .promo__media img {
   transform: scale(1.04);
-}
-
-.promo__headline {
-  padding-block: var(--space-md);
-  font-size: clamp(1rem, 0.94rem + 0.25vw, 1.375rem);
-  font-weight: var(--fw-bold);
-  text-align: center;
-  line-height: var(--lh-tight);
 }
 
 .promo__cta {

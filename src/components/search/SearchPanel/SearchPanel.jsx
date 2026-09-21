@@ -1,6 +1,6 @@
 import { LanguageSelector } from '../LanguageSelector/LanguageSelector';
 import { SearchBar } from '../SearchBar/SearchBar';
-import adBanner from '../../../assets/images/ad-banner.png';
+import adBanner from '../../../assets/images/ad-banner.webp';
 import './SearchPanel.css';
 
 /**
@@ -38,11 +38,13 @@ export function SearchPanel({
           so screen-reader users can identify and skip it.
         */}
         <aside className="search-panel__ad" aria-label="Advertisement">
+          {/* Intrinsic size, so the browser reserves the right box before the
+              image loads and the hero does not jump. */}
           <img
             src={adBanner}
-            alt="Sponsored: Shaadi.com matrimonial service"
-            width="974"
-            height="112"
+            alt="Sponsored: Zaban - learn Urdu the easy way, 10 minutes a day"
+            width="1948"
+            height="320"
           />
         </aside>
       </div>
