@@ -1,0 +1,109 @@
+/* ==========================================================================
+   Page layout  (BEM block: .layout)
+   The article/sidebar split and the "no results" state.
+   ========================================================================== */
+
+.layout {
+  display: grid;
+  /*
+    The sidebar is a fixed 454px (from the design) and the article takes the
+    rest. minmax(0, 1fr) rather than plain 1fr because a bare 1fr refuses to
+    shrink below its content's minimum width, which makes long unbroken text
+    overflow the grid.
+  */
+  grid-template-columns: minmax(0, 1fr) var(--sidebar-width);
+  gap: var(--column-gap);
+  align-items: start;
+  padding-block: clamp(var(--space-lg), 4vw, var(--space-2xl));
+}
+
+.layout__sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(var(--space-md), 2vw, var(--space-xl));
+  /*
+    The sidebar is shorter than the article, so it sticks while the definitions
+    scroll past. Offset by the header plus the progress bar so nothing is
+    hidden underneath them.
+  */
+  position: sticky;
+  top: calc(var(--header-height) + var(--space-lg));
+}
+
+/* ---------- Empty / not-found state ---------- */
+
+.layout__empty {
+  padding-block: clamp(var(--space-xl), 5vw, var(--space-3xl));
+}
+
+.layout__empty-title {
+  margin-bottom: var(--space-sm);
+  font-size: var(--fs-heading);
+  font-weight: var(--fw-bold);
+  color: var(--color-primary);
+  line-height: var(--lh-tight);
+}
+
+.layout__empty-text {
+  margin-bottom: var(--space-md);
+  color: var(--color-text-soft);
+}
+
+.layout__empty-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.layout__empty-suggestion {
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-surface-muted);
+  font-weight: var(--fw-semibold);
+  text-transform: capitalize;
+  transition:
+    background-color var(--duration-fast) var(--ease-in-out),
+    color var(--duration-fast) var(--ease-in-out),
+    transform var(--duration-base) var(--ease-out);
+}
+
+.layout__empty-suggestion:hover,
+.layout__empty-suggestion:focus-visible {
+  background-color: var(--color-primary);
+  color: var(--color-text-invert);
+  transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   Breakpoints
+   ========================================================================== */
+
+/*
+  Below this width the 454px sidebar leaves too little room for two columns of
+  definitions, so it moves beneath the article and spans the full width.
+*/
+@media (max-width: 1024px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .layout__sidebar {
+    position: static; /* nothing left to stick alongside */
+    /* Side by side while there is still room, so the stacked sidebar does not
+       become an enormous vertical run of cards. */
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+
+  /* The word list is the tallest panel, so it gets its own full-width row. */
+  .layout__sidebar > :last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 700px) {
+  .layout__sidebar {
+    grid-template-columns: 1fr;
+  }
+}

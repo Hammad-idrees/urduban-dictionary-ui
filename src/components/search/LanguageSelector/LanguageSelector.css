@@ -1,0 +1,169 @@
+/* ==========================================================================
+   Language selector  (BEM block: .language)
+   Figma: 1030x60 bar, #1c56b9, 5px radius
+   ========================================================================== */
+
+.language {
+  display: grid;
+  /* The swap button is a fixed-width centre track, so the two language sides
+     stay exactly equal no matter how long the language names are. */
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  min-height: 60px;
+  padding-inline: clamp(var(--space-sm), 2vw, var(--space-lg));
+  border-radius: var(--radius-sm);
+  background-color: var(--color-primary-dark);
+}
+
+.language__side {
+  position: relative; /* anchor for the absolutely positioned dropdown */
+}
+
+/* The target side aligns to the right edge, mirroring the design. */
+.language__side:last-of-type {
+  justify-self: end;
+}
+
+/* ---------- Trigger ---------- */
+
+.language__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-invert);
+  font-size: var(--fs-cta);
+  font-weight: var(--fw-bold);
+  transition: background-color var(--duration-fast) var(--ease-in-out);
+}
+
+.language__trigger:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+.language__chevron {
+  width: 14px;
+  height: auto;
+  transition: transform var(--duration-base) var(--ease-in-out);
+}
+
+/* Points up while its menu is open - the standard disclosure cue. */
+.language__chevron--open {
+  transform: rotate(180deg);
+}
+
+/* ---------- Swap button ---------- */
+
+.language__swap {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-pill);
+  transition:
+    background-color var(--duration-fast) var(--ease-in-out),
+    transform var(--duration-slow) var(--ease-out);
+}
+
+.language__swap:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+.language__swap img {
+  width: 20px;
+  height: auto;
+  /* Figma stores one left-pointing arrow and mirrors it on the canvas rather
+     than exporting a second asset, so the flip has to be reproduced here. */
+  transform: scaleX(-1);
+  transition: transform var(--duration-slow) var(--ease-out);
+}
+
+/*
+  Spinning the arrow a full turn on hover previews what the button does.
+  A half turn would leave it pointing backwards, so 360deg it is.
+  The mirror must be repeated - transform replaces, it does not accumulate.
+*/
+.language__swap:hover img,
+.language__swap:focus-visible img {
+  transform: scaleX(-1) rotate(360deg);
+}
+
+/* ---------- Dropdown ---------- */
+
+.language__options {
+  position: absolute;
+  top: calc(100% + var(--space-xs));
+  left: 0;
+  z-index: var(--z-dropdown);
+  min-width: 160px;
+  padding: var(--space-2xs);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-card);
+
+  /* Closed state. visibility (not display) keeps the transition alive, and
+     pointer-events:none stops the hidden menu swallowing clicks. */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-8px);
+  transition:
+    opacity var(--duration-fast) var(--ease-in-out),
+    transform var(--duration-base) var(--ease-out),
+    visibility var(--duration-base);
+}
+
+.language__options--open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* Right-hand dropdown opens toward the left so it cannot overflow the bar. */
+.language__side:last-of-type .language__options {
+  left: auto;
+  right: 0;
+}
+
+.language__option {
+  display: block;
+  width: 100%;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  text-align: left;
+  font-size: 1rem;
+  color: var(--color-text);
+  transition: background-color var(--duration-fast) var(--ease-in-out);
+}
+
+.language__option:hover {
+  background-color: var(--color-surface-muted);
+}
+
+.language__option--active {
+  background-color: var(--color-primary);
+  color: var(--color-text-invert);
+  font-weight: var(--fw-bold);
+}
+
+/* ==========================================================================
+   Breakpoints
+   ========================================================================== */
+
+@media (max-width: 480px) {
+  .language {
+    padding-inline: var(--space-xs);
+  }
+
+  .language__trigger {
+    font-size: 1rem;
+    gap: var(--space-2xs);
+  }
+
+  .language__swap {
+    width: 36px;
+    height: 36px;
+  }
+}

@@ -1,0 +1,40 @@
+/* ==========================================================================
+   App download card  (BEM block: .app-download)
+   ========================================================================== */
+
+.app-download__title {
+  /* Full-bleed blue strip across the top of the card - the .card block's
+     overflow:hidden keeps it inside the rounded corners. */
+  padding: var(--space-sm);
+  background-color: var(--color-primary);
+  color: var(--color-text-invert);
+  font-size: var(--fs-banner);
+  font-weight: var(--fw-bold);
+  text-align: center;
+}
+
+.app-download__badges {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-sm);
+  /* Wraps to two rows if the sidebar is ever narrower than both badges. */
+  flex-wrap: wrap;
+}
+
+.app-download__badge {
+  display: block;
+  transition: transform var(--duration-base) var(--ease-out);
+}
+
+.app-download__badge:hover,
+.app-download__badge:focus-visible {
+  transform: scale(1.05);
+}
+
+.app-download__badge img {
+  /* Height-driven so both badges match optically despite differing widths. */
+  height: clamp(38px, 3.2vw, 50px);
+  width: auto;
+}

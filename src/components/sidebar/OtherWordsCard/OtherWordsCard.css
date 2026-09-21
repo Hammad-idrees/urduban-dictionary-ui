@@ -1,0 +1,66 @@
+/* ==========================================================================
+   Other words panel  (BEM block: .other-words)
+   Figma: 454x491 card, 26px centred title, 24px list
+   ========================================================================== */
+
+.other-words {
+  padding: var(--space-md) 0;
+}
+
+.other-words__title {
+  margin-bottom: var(--space-sm);
+  font-size: var(--fs-card-title);
+  font-weight: var(--fw-bold);
+  text-align: center;
+}
+
+.other-words__list {
+  display: flex;
+  flex-direction: column;
+}
+
+.other-words__item {
+  display: block;
+  width: 100%;
+  padding: var(--space-2xs) var(--space-lg);
+  text-align: left;
+  font-size: var(--fs-list);
+  color: var(--color-text);
+  /* The row highlight is drawn with a left border that starts transparent, so
+     the text never shifts sideways when it appears. */
+  border-left: 3px solid transparent;
+  transition:
+    background-color var(--duration-fast) var(--ease-in-out),
+    border-color var(--duration-fast) var(--ease-in-out),
+    color var(--duration-fast) var(--ease-in-out);
+}
+
+.other-words__item:hover,
+.other-words__item:focus-visible {
+  background-color: var(--color-surface-muted);
+  border-left-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* ==========================================================================
+   Breakpoints
+   ========================================================================== */
+
+/*
+  Once the sidebar drops below the article it spans the full page width, and a
+  single 12-item column would be needlessly tall. Columns let the browser
+  balance the list across the available width automatically.
+*/
+@media (max-width: 1024px) {
+  .other-words__list {
+    display: block;
+    columns: 2;
+    column-gap: var(--space-lg);
+  }
+}
+
+@media (max-width: 480px) {
+  .other-words__list {
+    columns: 1;
+  }
+}

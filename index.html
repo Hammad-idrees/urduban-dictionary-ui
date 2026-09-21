@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Urduban - English to Urdu dictionary, thesaurus, synonyms and antonyms."
+    />
+    <title>Urduban | English to Urdu Dictionary</title>
+
+    <!--
+      Fonts are preconnected so the browser opens the TLS handshake to Google's
+      font CDN before the stylesheet below is parsed. Saves ~100-300ms on first paint.
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!--
+      Inter    -> matches the Figma design for all Latin text.
+      Noto Naskh Arabic -> Inter has no Urdu glyphs, so Urdu would fall back to an
+      arbitrary system font and break line heights. Naskh (not Nastaliq) is used
+      because it keeps the compact line box the fixed-height design depends on.
+    -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Naskh+Arabic:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

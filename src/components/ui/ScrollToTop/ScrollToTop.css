@@ -1,0 +1,94 @@
+/* ==========================================================================
+   Scroll to top  (BEM block: .scroll-top)
+   --------------------------------------------------------------------------
+   This button floats over two very different backgrounds - the white article
+   area and the blue footer - so it cannot rely on a single solid fill. It uses
+   a translucent dark surface plus a light ring, which reads clearly against
+   both, while staying see-through enough not to hide the content underneath.
+   ========================================================================== */
+
+.scroll-top {
+  position: fixed;
+  bottom: clamp(var(--space-sm), 3vw, var(--space-lg));
+  right: clamp(var(--space-sm), 3vw, var(--space-lg));
+  z-index: var(--z-toTop);
+
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: var(--radius-pill);
+  color: var(--color-text-invert);
+
+  /*
+    Translucent so content scrolling past stays perceptible through the button,
+    but tuned for contrast rather than pushed as far as it will go. At 0.62 the
+    white chevron measures ~4:1 against the white article and ~9:1 against the
+    blue footer - both clear of the 3:1 WCAG minimum for UI glyphs. Going more
+    transparent drops the light-background case below that.
+  */
+  background-color: rgba(16, 48, 107, 0.62);
+  /* A light ring is what keeps the edge defined against the blue footer,
+     where the fill alone is too close in tone to register. */
+  border: 1.5px solid rgba(255, 255, 255, 0.65);
+  /* Lifts the glyph off whatever is behind it without fully hiding it. */
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+
+  /* Hidden state: faded, nudged down, and non-interactive. pointer-events is
+     essential - without it the invisible button still swallows clicks. */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(12px);
+  transition:
+    opacity var(--duration-base) var(--ease-in-out),
+    transform var(--duration-base) var(--ease-out),
+    background-color var(--duration-fast) var(--ease-in-out),
+    border-color var(--duration-fast) var(--ease-in-out),
+    visibility var(--duration-base);
+}
+
+/*
+  Full element opacity: the see-through effect comes from the background's
+  alpha alone. Fading the element as well would dim the white chevron and the
+  ring by the same amount, which is what made it hard to read on light
+  backgrounds - the transparency has to live in one layer, not two.
+*/
+.scroll-top--visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.scroll-top--visible:hover,
+.scroll-top--visible:focus-visible {
+  opacity: 1;
+  background-color: rgba(16, 48, 107, 0.92);
+  border-color: rgba(255, 255, 255, 0.9);
+}
+
+.scroll-top__icon {
+  width: 22px;
+  height: 22px;
+  /* currentColor on the path means the glyph inherits the button's colour. */
+  transition: transform var(--duration-base) var(--ease-out);
+}
+
+/* The arrow lifts out of the button on hover, previewing the upward motion. */
+.scroll-top:hover .scroll-top__icon {
+  transform: translateY(-3px);
+}
+
+/*
+  Fallback for browsers without backdrop-filter (mainly older Firefox): the
+  blur is what makes a 42%-alpha fill legible, so without it the surface is
+  made more opaque instead.
+*/
+@supports not (backdrop-filter: blur(6px)) {
+  .scroll-top {
+    background-color: rgba(16, 48, 107, 0.78);
+  }
+}

@@ -1,0 +1,124 @@
+/* ==========================================================================
+   Search bar  (BEM block: .search)
+   Figma: 1030x60 white field, 5px radius, 105px grey submit button
+   ========================================================================== */
+
+.search {
+  position: relative; /* anchor for the suggestions dropdown */
+}
+
+.search__form {
+  display: flex;
+  align-items: stretch;
+  min-height: 60px;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface);
+  /* overflow:hidden lets the children square off against the rounded corners
+     without each needing its own matching radius. */
+  overflow: hidden;
+  transition: box-shadow var(--duration-base) var(--ease-out);
+}
+
+/*
+  :focus-within highlights the whole control when the inner input is focused,
+  which is what a user perceives as "the search box is active".
+*/
+.search__form:focus-within {
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.55);
+}
+
+.search__input {
+  flex: 1;
+  min-width: 0; /* lets the flex item shrink below its content width */
+  padding-inline: clamp(var(--space-sm), 2vw, var(--space-lg));
+  border: none;
+  font-size: var(--fs-input);
+  color: var(--color-text);
+  background-color: transparent;
+}
+
+.search__input::placeholder {
+  color: #8a8a8a;
+}
+
+.search__button {
+  display: grid;
+  place-items: center;
+  width: clamp(64px, 6vw, 105px);
+  background-color: var(--color-surface-muted);
+  transition: background-color var(--duration-fast) var(--ease-in-out);
+}
+
+.search__button:hover {
+  background-color: #e3e3e3;
+}
+
+.search__button img {
+  width: clamp(20px, 1.6vw, 26px);
+  height: auto;
+  transition: transform var(--duration-base) var(--ease-out);
+}
+
+.search__button:hover img {
+  transform: scale(1.12);
+}
+
+/* ---------- Suggestions ---------- */
+
+.search__suggestions {
+  position: absolute;
+  top: calc(100% + var(--space-xs));
+  inset-inline: 0;
+  z-index: var(--z-dropdown);
+  padding: var(--space-2xs);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-card);
+  /* Long result lists scroll rather than running off the bottom of the hero. */
+  max-height: 320px;
+  overflow-y: auto;
+
+  /* This list is conditionally rendered, so it animates in on mount only. */
+  animation: search-drop var(--duration-base) var(--ease-out);
+}
+
+@keyframes search-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.search__suggestion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  width: 100%;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  text-align: left;
+  font-size: 1rem;
+  color: var(--color-text);
+  transition: background-color var(--duration-fast) var(--ease-in-out);
+}
+
+/* One modifier drives both the mouse and the keyboard highlight, so the two
+   can never disagree. */
+.search__suggestion--active {
+  background-color: var(--color-surface-muted);
+}
+
+.search__suggestion-word {
+  font-weight: var(--fw-semibold);
+  text-transform: capitalize;
+}
+
+.search__suggestion-urdu {
+  color: var(--color-primary);
+  font-size: 1.0625rem;
+}

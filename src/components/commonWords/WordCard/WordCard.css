@@ -1,0 +1,70 @@
+/* ==========================================================================
+   Word card  (BEM block: .word-card)
+   Figma: 363x194 white card, 4px #2269e1 underline
+   ========================================================================== */
+
+.word-card {
+  position: relative;
+  display: flex;
+  /* English pins to the top, Urdu to the bottom - space-between does this
+     without needing a spacer element. */
+  flex-direction: column;
+  justify-content: space-between;
+  /* Extra right padding on the first row keeps the English text clear of the
+     absolutely positioned dismiss button. */
+  padding: var(--space-md) var(--space-md) var(--space-lg);
+  min-height: 194px;
+}
+
+.word-card__dismiss {
+  position: absolute;
+  top: var(--space-sm);
+  right: var(--space-sm);
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-pill);
+  opacity: 0.55;
+  transition:
+    opacity var(--duration-fast) var(--ease-in-out),
+    background-color var(--duration-fast) var(--ease-in-out),
+    transform var(--duration-base) var(--ease-out);
+}
+
+.word-card__dismiss:hover,
+.word-card__dismiss:focus-visible {
+  opacity: 1;
+  background-color: var(--color-surface-muted);
+  transform: rotate(90deg); /* signals "close" more strongly than a colour change */
+}
+
+.word-card__dismiss img {
+  width: 14px;
+  height: 14px;
+}
+
+.word-card__english {
+  padding-right: var(--space-lg); /* clears the dismiss button */
+  font-size: var(--fs-body);
+  color: var(--color-text);
+}
+
+.word-card__urdu {
+  font-size: calc(var(--fs-body) * 1.1);
+  color: var(--color-text);
+}
+
+.word-card__underline {
+  position: absolute;
+  bottom: 0;
+  /* inset-inline rather than left/right so the bar still spans correctly if the
+     card is ever rendered inside an RTL container. */
+  inset-inline: 0;
+  height: 4px;
+  background-color: var(--color-primary);
+  /* Grows from the start edge on hover, echoing the nav underline. */
+  transform: scaleX(0.999);
+  transform-origin: left;
+  transition: transform var(--duration-base) var(--ease-out);
+}

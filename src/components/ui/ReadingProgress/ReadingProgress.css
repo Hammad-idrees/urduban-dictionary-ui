@@ -1,0 +1,23 @@
+/* ==========================================================================
+   Reading progress  (BEM block: .progress)
+   Figma: 8px tall track, #b5b5b5, rounded right cap
+   ========================================================================== */
+
+.progress {
+  position: sticky;
+  /* Sits directly under the sticky header so the two never overlap. */
+  top: var(--header-height);
+  z-index: var(--z-dropdown);
+  height: 8px;
+  background-color: var(--color-track);
+}
+
+.progress__fill {
+  height: 100%;
+  background-color: var(--color-primary);
+  /* Rounding only the trailing edge matches the design's single rounded cap. */
+  border-top-right-radius: var(--radius-md);
+  border-bottom-right-radius: var(--radius-md);
+  /* Smooths the jump between scroll events without lagging behind the user. */
+  transition: width 80ms linear;
+}

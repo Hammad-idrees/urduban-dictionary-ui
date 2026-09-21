@@ -1,0 +1,63 @@
+/* ==========================================================================
+   Search panel / hero  (BEM block: .search-panel)
+   Figma: full-bleed #2269e1 band, 482px tall
+   ========================================================================== */
+
+.search-panel {
+  background-color: var(--color-primary);
+  /* Vertical rhythm scales with the viewport instead of being locked to the
+     482px of the fixed design canvas. */
+  padding-block: clamp(var(--space-lg), 4vw, var(--space-3xl));
+}
+
+.search-panel__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(var(--space-md), 2.5vw, var(--space-xl));
+}
+
+/*
+  The controls column is capped at the design's 1030px. Because the band itself
+  is full-bleed, this keeps the selector and search field centred on wide
+  monitors instead of stretching to 1640px.
+*/
+.search-panel__controls {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(var(--space-sm), 1.6vw, var(--space-lg));
+  width: 100%;
+  max-width: 1030px;
+}
+
+/* ---------- Sponsored banner ---------- */
+
+.search-panel__ad {
+  width: 100%;
+  max-width: 974px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  line-height: 0; /* removes the inline-image gap under the <img> */
+}
+
+.search-panel__ad img {
+  width: 100%;
+  height: auto;
+  transition: transform var(--duration-slow) var(--ease-out);
+}
+
+.search-panel__ad:hover img {
+  transform: scale(1.02);
+}
+
+/* ==========================================================================
+   Breakpoints
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  /* The banner is a wide, text-heavy creative; hiding it on very narrow
+     screens beats shrinking it to an unreadable strip. */
+  .search-panel__ad {
+    display: none;
+  }
+}

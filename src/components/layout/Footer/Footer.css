@@ -1,0 +1,178 @@
+/* ==========================================================================
+   Footer  (BEM block: .footer)
+   ========================================================================== */
+
+.footer {
+  background-color: var(--color-primary);
+  color: var(--color-text-invert);
+  padding-block: clamp(var(--space-xl), 5vw, var(--space-3xl));
+}
+
+/*
+  Three columns on desktop. The brand column is wider (1.4fr) because it holds
+  the logo and two lines of copyright, while the link columns only hold text.
+*/
+.footer__inner {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: var(--column-gap);
+  align-items: start;
+}
+
+/* ---------- Brand column ---------- */
+
+.footer__brand {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.footer__logo {
+  width: clamp(160px, 16vw, 208px);
+  height: auto;
+  margin-bottom: var(--space-sm);
+}
+
+.footer__copyright {
+  font-size: var(--fs-copyright);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-tight);
+}
+
+.footer__socials {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-top: var(--space-md);
+}
+
+/*
+  The exported icons are white SVGs, so they cannot be recoloured via CSS
+  through an <img> tag. Hover therefore uses opacity and lift, which reads as
+  clearly interactive without needing a colour change.
+*/
+.footer__social-link {
+  display: block;
+  opacity: 0.9;
+  transition:
+    opacity var(--duration-fast) var(--ease-in-out),
+    transform var(--duration-base) var(--ease-out);
+}
+
+.footer__social-link:hover,
+.footer__social-link:focus-visible {
+  opacity: 1;
+  transform: translateY(-3px) scale(1.08);
+}
+
+.footer__social-link img {
+  width: clamp(26px, 2vw, 36px);
+  height: auto;
+}
+
+/* ---------- Link columns ---------- */
+
+.footer__links {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.footer__link {
+  display: inline-block;
+  font-size: var(--fs-footer-link);
+  font-weight: var(--fw-bold);
+  /* Padding gives the link a comfortable touch target without moving the text. */
+  padding-block: 2px;
+  transition:
+    transform var(--duration-base) var(--ease-out),
+    opacity var(--duration-fast) var(--ease-in-out);
+}
+
+/*
+  Nudging the link inward on hover is a common footer affordance and, unlike a
+  colour change, stays legible against the solid blue.
+*/
+.footer__link:hover,
+.footer__link:focus-visible {
+  transform: translateX(6px);
+  opacity: 0.88;
+}
+
+/* ---------- App download block ---------- */
+
+.footer__apps {
+  margin-top: var(--space-lg);
+}
+
+.footer__apps-title {
+  font-size: var(--fs-footer-link);
+  font-weight: var(--fw-bold);
+  margin-bottom: var(--space-sm);
+}
+
+.footer__apps-icons {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.footer__apps-icons a {
+  transition: transform var(--duration-base) var(--ease-out);
+}
+
+.footer__apps-icons a:hover,
+.footer__apps-icons a:focus-visible {
+  transform: translateY(-3px) scale(1.06);
+}
+
+.footer__apps-icons img {
+  width: auto;
+  height: clamp(34px, 3vw, 48px);
+}
+
+/* ==========================================================================
+   Breakpoints
+   ========================================================================== */
+
+/* Tablet: brand spans the full width, the two link columns sit beneath it. */
+@media (max-width: 900px) {
+  .footer__inner {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .footer__brand {
+    grid-column: 1 / -1;
+    margin-bottom: var(--space-lg);
+  }
+}
+
+/* Mobile: a single centred stack. */
+@media (max-width: 600px) {
+  .footer__inner {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .footer__brand {
+    align-items: center;
+    margin-bottom: var(--space-md);
+  }
+
+  .footer__links {
+    align-items: center;
+  }
+
+  .footer__apps {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* The inward nudge reads as misalignment once the column is centred. */
+  .footer__link:hover,
+  .footer__link:focus-visible {
+    transform: none;
+  }
+}

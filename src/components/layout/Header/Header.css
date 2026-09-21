@@ -1,0 +1,196 @@
+/* ==========================================================================
+   Header  (BEM block: .header)
+   ========================================================================== */
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header);
+  background-color: var(--color-primary);
+  box-shadow: var(--shadow-header);
+}
+
+.header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  min-height: var(--header-height);
+}
+
+/* ---------- Logo ---------- */
+
+.header__logo {
+  flex-shrink: 0; /* never let the nav squeeze the logo */
+  display: block;
+  transition: transform var(--duration-base) var(--ease-out);
+}
+
+.header__logo:hover {
+  transform: scale(1.04);
+}
+
+.header__logo img {
+  /* Width is capped rather than fixed so the logo shrinks on narrow phones. */
+  width: clamp(140px, 14vw, 208px);
+  height: auto;
+}
+
+/* ---------- Desktop navigation ---------- */
+
+.header__list {
+  display: flex;
+  align-items: center;
+  gap: clamp(var(--space-sm), 2.2vw, var(--space-xl));
+}
+
+.header__link {
+  position: relative;
+  display: inline-block;
+  padding-block: var(--space-xs);
+  color: var(--color-text-invert);
+  font-size: var(--fs-nav);
+  font-weight: var(--fw-bold);
+  white-space: nowrap;
+  transition: opacity var(--duration-fast) var(--ease-in-out);
+}
+
+/*
+  Underline built from a pseudo-element rather than `text-decoration` so it can
+  animate. Scaling a full-width bar from 0 keeps the animation on the compositor
+  (transform only) instead of triggering layout on every frame.
+*/
+.header__link::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 2px;
+  background-color: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--duration-base) var(--ease-out);
+}
+
+.header__link:hover::after,
+.header__link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.header__link:hover {
+  opacity: 0.9;
+}
+
+/* ---------- Hamburger toggle ---------- */
+
+.header__toggle {
+  display: none; /* revealed at the tablet breakpoint below */
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 44px;  /* 44px is the minimum comfortable touch target */
+  height: 44px;
+  padding: var(--space-xs);
+}
+
+.header__bar {
+  display: block;
+  width: 100%;
+  height: 3px;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-text-invert);
+  transition:
+    transform var(--duration-base) var(--ease-in-out),
+    opacity var(--duration-fast) var(--ease-in-out);
+}
+
+/*
+  Bars -> X. The outer two rotate into a cross and translate to meet in the
+  middle; the centre bar simply fades out.
+*/
+.header__toggle--open .header__bar:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+
+.header__toggle--open .header__bar:nth-child(2) {
+  opacity: 0;
+}
+
+.header__toggle--open .header__bar:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+/* ---------- Drawer + backdrop ---------- */
+
+.header__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-backdrop);
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  /* visibility (not display) so the fade can actually run before it is removed. */
+  visibility: hidden;
+  transition:
+    opacity var(--duration-base) var(--ease-in-out),
+    visibility var(--duration-base);
+}
+
+.header__backdrop--visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.header__drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: var(--z-drawer);
+  width: min(80vw, 320px);
+  height: 100dvh; /* dvh accounts for mobile browser chrome that hides on scroll */
+  padding: calc(var(--header-height) + var(--space-lg)) var(--space-lg) var(--space-lg);
+  background-color: var(--color-primary-dark);
+  /* Parked off-screen instead of display:none so it can slide. */
+  transform: translateX(100%);
+  transition: transform var(--duration-base) var(--ease-out);
+  overflow-y: auto;
+}
+
+.header__drawer--open {
+  transform: translateX(0);
+}
+
+.header__drawer-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.header__drawer-link {
+  display: block;
+  padding: var(--space-sm) var(--space-xs);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-invert);
+  font-size: 1.125rem;
+  font-weight: var(--fw-bold);
+  transition: background-color var(--duration-fast) var(--ease-in-out);
+}
+
+.header__drawer-link:hover,
+.header__drawer-link:focus-visible {
+  background-color: rgba(255, 255, 255, 0.14);
+}
+
+/* ==========================================================================
+   Breakpoints
+   The nav collapses when six bold links can no longer sit beside the logo.
+   ========================================================================== */
+
+@media (max-width: 900px) {
+  .header__nav {
+    display: none;
+  }
+
+  .header__toggle {
+    display: flex;
+  }
+}

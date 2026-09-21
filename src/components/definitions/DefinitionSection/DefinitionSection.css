@@ -1,0 +1,77 @@
+/* ==========================================================================
+   Definition block  (BEM block: .definition)
+   Figma: 40px blue heading, 18px body, English left / Urdu right
+   ========================================================================== */
+
+.definition {
+  /* Generous separation between parts of speech - the design leaves roughly
+     300px between blocks on the 3000px canvas. */
+  padding-block: clamp(var(--space-lg), 3.5vw, var(--space-2xl));
+}
+
+/* A hairline between blocks aids scanning; the first block needs no rule
+   above it, so the border goes on the bottom of every block but the last. */
+.definition:not(:last-child) {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+}
+
+.definition__heading {
+  margin-bottom: clamp(var(--space-sm), 1.5vw, var(--space-md));
+  color: var(--color-primary);
+  font-size: var(--fs-heading);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-tight);
+}
+
+.definition__word {
+  /* The headword arrives lowercase from the data; the design shows it that
+     way, so this only guarantees consistency if the source ever changes. */
+  text-transform: lowercase;
+}
+
+/*
+  Two equal columns with a wide gutter, mirroring the design's 422px English
+  block on the left and 422px Urdu block on the right.
+*/
+.definition__columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(var(--space-lg), 6vw, var(--space-3xl));
+  align-items: start;
+}
+
+.definition__text {
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--color-text-soft);
+}
+
+/*
+  The Urdu column is right-aligned so the two languages read outward from the
+  centre gutter, exactly as the design lays them out. `.urdu` (global.css)
+  already supplies the font, direction and looser line-height.
+*/
+.definition__text--urdu {
+  font-size: calc(var(--fs-body) * 1.08); /* Naskh runs visually smaller than Inter */
+}
+
+/* ==========================================================================
+   Breakpoints
+   ========================================================================== */
+
+/*
+  Below tablet the two languages stack. Left-aligning the Urdu block would be
+  wrong - RTL text stays right-aligned - so instead the stacked blocks get a
+  labelled divider's worth of breathing room between them.
+*/
+@media (max-width: 768px) {
+  .definition__columns {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  .definition__text--urdu {
+    padding-top: var(--space-md);
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+  }
+}

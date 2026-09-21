@@ -1,0 +1,29 @@
+/* ==========================================================================
+   Card  (BEM block: .card)
+   Figma: white surface, 0 4px 15px rgba(0,0,0,.25)
+   ========================================================================== */
+
+.card {
+  background-color: var(--color-surface);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-card);
+  /* Clips the coloured header strip and images to the rounded corners. */
+  overflow: hidden;
+}
+
+/*
+  Only cards that represent an action get the lift. Applying it to static
+  panels would imply they are clickable when they are not.
+  Transform and box-shadow are both compositor-friendly, so this stays at 60fps.
+*/
+.card--interactive {
+  transition:
+    transform var(--duration-base) var(--ease-out),
+    box-shadow var(--duration-base) var(--ease-out);
+}
+
+.card--interactive:hover,
+.card--interactive:focus-within {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card-hover);
+}

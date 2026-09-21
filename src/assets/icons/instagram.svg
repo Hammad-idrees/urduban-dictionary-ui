@@ -1,0 +1,22 @@
+<svg width="36" height="36" viewBox="0 0 35.3333 35.3333" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!--
+    Figma exported the Instagram glyph as three separate vector layers.
+    The paths below are those exports verbatim; only the translate offsets
+    were derived (from the layers' positions in the Figma footer) so the
+    three pieces sit in one shared coordinate space.
+  -->
+  <path
+    d="M26 1H9.33333C4.73096 1 1 4.73096 1 9.33333V26C1 30.6024 4.73096 34.3333 9.33333 34.3333H26C30.6024 34.3333 34.3333 30.6024 34.3333 26V9.33333C34.3333 4.73096 30.6024 1 26 1Z"
+    stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+  />
+  <path
+    transform="translate(10, 9.9)"
+    d="M14.2612 6.68878C14.4669 8.07586 14.23 9.49248 13.5842 10.7371C12.9383 11.9818 11.9165 12.9911 10.6639 13.6216C9.41141 14.252 7.99198 14.4714 6.60754 14.2487C5.22311 14.0259 3.94417 13.3723 2.95263 12.3807C1.96109 11.3892 1.30745 10.1102 1.08468 8.72581C0.861903 7.34137 1.08134 5.92194 1.71178 4.66941C2.34221 3.41687 3.35154 2.39502 4.59621 1.74919C5.84087 1.10336 7.25749 0.866432 8.64457 1.07212C10.0594 1.28193 11.3693 1.94122 12.3807 2.95263C13.3921 3.96403 14.0514 5.27391 14.2612 6.68878Z"
+    stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+  />
+  <path
+    transform="translate(23.79, 7.52)"
+    d="M1 1H1.01667"
+    stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+  />
+</svg>

@@ -1,0 +1,136 @@
+/* ==========================================================================
+   Common words carousel  (BEM block: .carousel)
+   Figma: 40px heading, 363x194 cards, 48px gutter
+   ========================================================================== */
+
+.carousel {
+  /* Local token so the track translation and the slide width can never
+     disagree about how wide the gutter is. */
+  --carousel-gap: clamp(var(--space-sm), 2.5vw, 48px);
+
+  /* This is the last section before the footer, so it owns the gap between
+     the two. Without it the pagination dots sit directly on the blue band. */
+  padding-bottom: clamp(var(--space-xl), 5vw, var(--space-3xl));
+}
+
+.carousel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  margin-bottom: clamp(var(--space-md), 2.5vw, var(--space-xl));
+}
+
+.carousel__title {
+  font-size: var(--fs-heading);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-tight);
+}
+
+.carousel__controls {
+  display: flex;
+  gap: var(--space-xs);
+  flex-shrink: 0;
+}
+
+.carousel__arrow {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-pill);
+  transition:
+    background-color var(--duration-fast) var(--ease-in-out),
+    transform var(--duration-base) var(--ease-out);
+}
+
+.carousel__arrow:hover,
+.carousel__arrow:focus-visible {
+  background-color: var(--color-surface-muted);
+}
+
+.carousel__arrow:active {
+  transform: scale(0.92);
+}
+
+.carousel__arrow img {
+  width: 12px;
+  height: auto;
+}
+
+/* Figma exports a single left chevron and mirrors it for "forward", so the
+   next button flips the same asset rather than shipping a duplicate file. */
+.carousel__arrow--next img {
+  transform: scaleX(-1);
+}
+
+/* ---------- Track ---------- */
+
+.carousel__viewport {
+  /* Clips the off-page cards. Without this the track would simply overflow
+     and every card would stay visible. */
+  overflow: hidden;
+  /* Breathing room so the cards' drop shadows are not sliced off by the clip. */
+  padding: var(--space-xs) var(--space-2xs) var(--space-md);
+  margin: calc(var(--space-xs) * -1) calc(var(--space-2xs) * -1) calc(var(--space-md) * -1);
+}
+
+.carousel__track {
+  display: flex;
+  gap: var(--carousel-gap);
+  /*
+    One page of travel is the full viewport width plus one gutter, because the
+    gutter sits between pages as well as between cards.
+    --page and --per-view are set inline by the component.
+  */
+  transform: translateX(calc(var(--page) * -1 * (100% + var(--carousel-gap))));
+  transition: transform var(--duration-slow) var(--ease-out);
+}
+
+/*
+  Each slide takes an equal share of the row after the gutters are subtracted.
+  flex-basis (not width) because the shorthand's 0 0 stops the cards growing or
+  shrinking away from that exact share.
+*/
+.carousel__slide {
+  flex: 0 0
+    calc(
+      (100% - (var(--per-view) - 1) * var(--carousel-gap)) / var(--per-view)
+    );
+}
+
+/* ---------- Dots ---------- */
+
+.carousel__dots {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-xs);
+  margin-top: var(--space-md);
+}
+
+.carousel__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-track);
+  transition:
+    background-color var(--duration-fast) var(--ease-in-out),
+    transform var(--duration-base) var(--ease-out);
+}
+
+.carousel__dot:hover {
+  transform: scale(1.25);
+}
+
+/* The active dot stretches into a pill - readable even for users who cannot
+   distinguish the colour change. */
+.carousel__dot--active {
+  width: 28px;
+  background-color: var(--color-primary);
+}
+
+.carousel__empty {
+  padding: var(--space-xl) 0;
+  color: var(--color-text-soft);
+  text-align: center;
+}

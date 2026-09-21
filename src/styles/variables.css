@@ -1,0 +1,104 @@
+/* ==========================================================================
+   Design tokens
+   --------------------------------------------------------------------------
+   Every value here was read directly out of the Figma file rather than eyeballed
+   from a screenshot. Components never hardcode a colour or size - they consume
+   these tokens - so a rebrand is a single-file change.
+
+   The Figma frame is a fixed 1920x3000 canvas. The pixel values below are
+   therefore the DESKTOP MAXIMUM; the clamp() expressions scale them down for
+   smaller viewports so we never need a font-size override inside a media query.
+   ========================================================================== */
+
+:root {
+  /* ---------- Colour ---------- */
+  --color-primary: #2269e1;        /* header, footer, headings, card underline */
+  --color-primary-dark: #1c56b9;   /* language selector bar, scroll-to-top */
+  --color-primary-deep: #17489a;   /* hover state - derived, not in Figma */
+  --color-accent: #f8b318;         /* "TRY IT FOR FREE" CTA */
+  --color-accent-dark: #e0a012;    /* accent hover - derived */
+
+  --color-surface: #ffffff;
+  --color-surface-muted: #f2f2f2;  /* search button background */
+  --color-placeholder: #d9d9d9;    /* image placeholder fill */
+  --color-track: #b5b5b5;          /* reading-progress bar track */
+
+  --color-text: #000000;
+  --color-text-soft: #3a3a3a;      /* long body copy - pure black is harsh at 18px */
+  --color-text-invert: #ffffff;
+
+  --color-focus: #ffbf47;          /* focus ring - high contrast on both blue and white */
+
+  /* ---------- Typography ---------- */
+  --font-latin: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  /* Inter ships no Urdu glyphs. Without this the browser picks an arbitrary
+     fallback and the line boxes change height, breaking the two-column
+     English/Urdu alignment. */
+  --font-urdu: 'Noto Naskh Arabic', 'Segoe UI', serif;
+
+  --fw-regular: 400;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+
+  /* min -------- preferred -------- max(Figma) */
+  --fs-nav: clamp(0.9375rem, 0.85rem + 0.4vw, 1.375rem);      /* -> 22px */
+  --fs-body: clamp(1rem, 0.96rem + 0.18vw, 1.125rem);         /* -> 18px */
+  --fs-heading: clamp(1.625rem, 1.2rem + 1.5vw, 2.5rem);      /* -> 40px */
+  --fs-card-title: clamp(1.125rem, 1rem + 0.45vw, 1.625rem);  /* -> 26px */
+  --fs-list: clamp(1rem, 0.9rem + 0.45vw, 1.5rem);            /* -> 24px */
+  --fs-footer-link: clamp(1rem, 0.9rem + 0.45vw, 1.5rem);     /* -> 24px */
+  --fs-copyright: clamp(1.125rem, 1rem + 0.55vw, 1.75rem);    /* -> 28px */
+  --fs-input: clamp(1rem, 0.94rem + 0.25vw, 1.375rem);        /* -> 22px */
+  --fs-banner: clamp(1rem, 0.94rem + 0.25vw, 1.25rem);        /* -> 20px */
+  --fs-cta: clamp(1rem, 0.9rem + 0.45vw, 1.5rem);             /* -> 24px */
+
+  --lh-tight: 1.2;
+  --lh-body: 1.38;   /* exact value from the Figma body text layers */
+  --lh-loose: 1.6;
+
+  /* ---------- Spacing (4px base scale) ---------- */
+  --space-2xs: 0.25rem;  /*  4px */
+  --space-xs: 0.5rem;    /*  8px */
+  --space-sm: 1rem;      /* 16px */
+  --space-md: 1.5rem;    /* 24px */
+  --space-lg: 2rem;      /* 32px */
+  --space-xl: 3rem;      /* 48px */
+  --space-2xl: 4rem;     /* 64px */
+  --space-3xl: 6rem;     /* 96px */
+
+  /* ---------- Layout ---------- */
+  /* 1920 canvas - 140px gutter on each side = 1640px of usable content. */
+  --container-max: 1640px;
+  --container-pad: clamp(1rem, 4vw, 140px);
+  --sidebar-width: 454px;   /* fixed width of the right-hand ad/word rail */
+  --header-height: 80px;
+  --column-gap: clamp(1.5rem, 3vw, 4rem);
+
+  /* ---------- Borders & radii ---------- */
+  --radius-sm: 5px;    /* search bar, language selector */
+  --radius-md: 10px;   /* progress bar cap */
+  --radius-pill: 999px;
+
+  /* ---------- Elevation ---------- */
+  --shadow-card: 0 4px 15px rgba(0, 0, 0, 0.25);
+  --shadow-card-hover: 0 10px 28px rgba(0, 0, 0, 0.28);
+  --shadow-header: 0 2px 25px rgba(0, 0, 0, 0.25);
+
+  /* ---------- Motion ----------
+     Durations are grouped so the whole UI can be retimed at once, and every
+     component references these instead of inventing its own timing. */
+  --duration-fast: 150ms;
+  --duration-base: 250ms;
+  --duration-slow: 450ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);      /* decelerating - entrances */
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);  /* symmetric - toggles */
+
+  /* ---------- Stacking order ----------
+     Kept in one place so z-index values are comparable instead of a guess. */
+  --z-base: 1;
+  --z-dropdown: 50;
+  --z-header: 100;
+  --z-backdrop: 150;
+  --z-drawer: 200;
+  --z-toTop: 250;
+}
