@@ -10,6 +10,18 @@
     <title>Urduban | English to Urdu Dictionary</title>
 
     <!--
+      Favicons. Files live in public/ and are served from the site root.
+      Order matters: browsers that understand SVG take the vector and ignore
+      the .ico, while older ones fall back to the .ico without downloading the
+      SVG. The .ico is multi-resolution (16/32/48).
+    -->
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <!-- Tints the browser UI on mobile to match the header. -->
+    <meta name="theme-color" content="#2269e1" />
+
+    <!--
       Fonts are preconnected so the browser opens the TLS handshake to Google's
       font CDN before the stylesheet below is parsed. Saves ~100-300ms on first paint.
     -->
