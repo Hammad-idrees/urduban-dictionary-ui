@@ -87,6 +87,9 @@
     four of them stay in agreement at every width for free.
   */
   --header-height: clamp(56px, 7vw, 80px);
+  /* The second sticky bar. A token rather than a literal because the fragment
+     offset in global.css has to add it to the header height to clear both. */
+  --progress-height: 8px;
   --column-gap: clamp(1.5rem, 3vw, 4rem);
 
   /* ---------- Borders & radii ---------- */

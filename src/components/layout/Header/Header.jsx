@@ -62,12 +62,56 @@ export function Header() {
     if (hasOpened.current) toggleRef.current?.focus();
   }, [isDrawerOpen]);
 
-  // Escape is the expected way out of any overlay.
+  /*
+    Escape to dismiss, and a focus trap while open.
+
+    Both live in one listener because they answer the same question - "what
+    should this keypress do while the drawer has the screen?" - and two
+    listeners on the same event would only be two things to keep in step.
+
+    The trap matters because the page behind the drawer is still rendered and
+    still focusable: without it, Tab walks off the last link and starts
+    wandering the document underneath, invisible behind the backdrop.
+  */
+  const drawerRef = useRef(null);
+
   useEffect(() => {
     if (!isDrawerOpen) return;
 
     const handleKeyDown = (event) => {
-      if (event.key === 'Escape') closeDrawer();
+      if (event.key === 'Escape') {
+        closeDrawer();
+        return;
+      }
+
+      if (event.key !== 'Tab') return;
+
+      /*
+        The toggle is listed FIRST and is part of the cycle even though it sits
+        outside the panel: it is the button that closes the drawer, so shutting
+        it out of the loop would trap a keyboard user with no way out but
+        Escape. It is also where focus already is when the drawer opens, so the
+        first Tab moves naturally into the links.
+      */
+      const focusable = [
+        toggleRef.current,
+        ...(drawerRef.current?.querySelectorAll('a[href]') ?? []),
+      ].filter(Boolean);
+
+      if (focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      // Only the two ends need handling - everything between them is the
+      // browser's own tab order, which is already correct.
+      if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      } else if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      }
     };
 
     window.addEventListener('keydown', handleKeyDown);
@@ -123,6 +167,7 @@ export function Header() {
 
       <nav
         id="mobile-drawer"
+        ref={drawerRef}
         className={`header__drawer ${isDrawerOpen ? 'header__drawer--open' : ''}`}
         aria-label="Mobile"
         // Hiding the drawer from assistive tech when closed stops a screen
@@ -130,8 +175,11 @@ export function Header() {
         aria-hidden={!isDrawerOpen}
       >
         <ul className="header__drawer-list list-reset">
-          {mainNavLinks.map((link) => (
-            <li key={link.label}>
+          {mainNavLinks.map((link, index) => (
+            // --drawer-index feeds the stagger in the stylesheet, so the links
+            // arrive one after another behind the panel's own slide rather
+            // than being fully formed the moment it starts moving.
+            <li key={link.label} style={{ '--drawer-index': index }}>
               <a
                 className="header__drawer-link"
                 href={link.href}

@@ -30,6 +30,33 @@
   align-items: start;
 }
 
+/* ---------- Scroll reveal ----------
+   The footer was the last major section that simply appeared - the definitions,
+   the examples and the phrase carousel all already fade up on entry.
+
+   Each block carries the shared `.reveal` class from global.css, which supplies
+   the hidden state and the transition; all this rule adds is the per-block
+   delay. Reusing `.reveal` rather than inventing a local class is deliberate:
+   the global prefers-reduced-motion block already forces `.reveal` to its
+   final state, so the whole sequence disarms itself for free. There is nothing
+   left to transition, and the delays below never get to run.
+   -------------------------------------------------------------------------- */
+
+.footer.is-visible .reveal {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: calc(var(--reveal-index, 0) * 110ms);
+}
+
+/*
+  The icons are inside the brand column, so they wait for it: the fixed offset
+  covers that block's own arrival, and the smaller step keeps four items from
+  outrunning the three larger ones above.
+*/
+.footer.is-visible .footer__social-item {
+  transition-delay: calc(260ms + var(--reveal-index, 0) * 70ms);
+}
+
 /* ---------- Brand column ---------- */
 
 .footer__brand {
@@ -204,6 +231,7 @@
 }
 
 .footer__link {
+  position: relative; /* anchor for the marker below */
   display: inline-block;
   font-size: var(--fs-footer-link);
   font-weight: var(--fw-bold);
@@ -215,13 +243,49 @@
 }
 
 /*
+  The dash the label slides toward.
+
+  It is parked exactly 16px left of the link and the label steps exactly 16px
+  right, so by the end of the hover the dash has landed where the text began -
+  the two swap places. That is the whole point: the old translateX moved the
+  label toward nothing, which read as a twitch rather than a gesture.
+
+  Being a child of the link, it rides along with that translate, which is what
+  makes the two movements read as one motion instead of two.
+*/
+.footer__link::before {
+  content: '';
+  position: absolute;
+  left: -16px;
+  top: 50%;
+  width: 10px;
+  height: 2px;
+  border-radius: var(--radius-pill);
+  background-color: currentColor;
+  /* translateY centres it on the text; scaleX is the part that animates, and
+     it grows from the left so the dash extends toward the label. */
+  transform: translateY(-50%) scaleX(0);
+  transform-origin: left;
+  opacity: 0;
+  transition:
+    transform var(--duration-base) var(--ease-out),
+    opacity var(--duration-fast) var(--ease-in-out);
+}
+
+/*
   Nudging the link inward on hover is a common footer affordance and, unlike a
   colour change, stays legible against the solid blue.
 */
 .footer__link:hover,
 .footer__link:focus-visible {
-  transform: translateX(6px);
+  transform: translateX(16px);
   opacity: 0.88;
+}
+
+.footer__link:hover::before,
+.footer__link:focus-visible::before {
+  transform: translateY(-50%) scaleX(1);
+  opacity: 1;
 }
 
 /* ---------- App download block ---------- */
@@ -338,6 +402,13 @@
   .footer__link:hover,
   .footer__link:focus-visible {
     transform: none;
+  }
+
+  /* With the label no longer stepping aside there is nothing for the dash to
+     trade places with, and at -16px it would land in the gutter or over the
+     neighbouring column. */
+  .footer__link::before {
+    display: none;
   }
 
   /* Wraps to two or three lines in a narrow column, so it is stepped down a

@@ -122,7 +122,10 @@ export default function App() {
 
       <main id="main-content">
         <div className="container layout">
-          <div className="layout__main">
+          {/* Anchor target for the "Dictionary" / "Synonyms" nav links - the
+              offset that keeps it clear of the two sticky bars is the [id]
+              rule in global.css. */}
+          <div className="layout__main" id="definitions">
             {isLoading ? (
               <DefinitionSkeleton />
             ) : missingTerm ? (

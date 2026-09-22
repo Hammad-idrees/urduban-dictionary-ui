@@ -8,7 +8,7 @@
   /* Sits directly under the sticky header so the two never overlap. */
   top: var(--header-height);
   z-index: var(--z-progress);
-  height: 8px;
+  height: var(--progress-height);
   background-color: var(--color-track);
 }
 

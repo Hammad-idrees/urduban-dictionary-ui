@@ -62,7 +62,12 @@ export function CommonWordsCarousel({ phrases }) {
   const hasMultiplePages = pageCount > 1;
 
   return (
-    <section className="carousel reveal" ref={revealRef} aria-labelledby="common-words-title">
+    <section
+      className="carousel reveal"
+      id="common-words"
+      ref={revealRef}
+      aria-labelledby="common-words-title"
+    >
       <div className="carousel__header">
         <h2 className="carousel__title" id="common-words-title">
           Most Common Words:

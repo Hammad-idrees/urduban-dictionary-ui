@@ -26,11 +26,24 @@
   transition: transform var(--duration-base) var(--ease-out);
 }
 
-.header__logo:hover {
+.header__logo:hover,
+.header__logo:focus-visible {
   transform: scale(1.04);
 }
 
+/*
+  A deliberately restrained echo of the footer mark's spotlight - the same idea
+  at a fraction of the intensity. The footer is a destination you have arrived
+  at, so it can afford a flourish; this one is pinned over the content for the
+  whole session and should not keep pulling the eye off what scrolls beneath it.
+*/
+.header__logo:hover img,
+.header__logo:focus-visible img {
+  filter: brightness(1.08) drop-shadow(0 0 8px rgba(255, 255, 255, 0.45));
+}
+
 .header__logo img {
+  transition: filter var(--duration-base) var(--ease-in-out);
   /*
     The 14vw preferred term only overtakes the floor above ~860px, so every
     phone width lands on the minimum - which makes that floor, not the vw, the
@@ -222,12 +235,41 @@
   */
   font-size: 1.125rem;
   font-weight: var(--fw-bold);
-  transition: background-color var(--duration-fast) var(--ease-in-out);
+
+  /* Resting state of the stagger below. */
+  opacity: 0;
+  transform: translateX(16px);
+  transition:
+    background-color var(--duration-fast) var(--ease-in-out),
+    opacity var(--duration-base) var(--ease-out),
+    transform var(--duration-base) var(--ease-out);
+}
+
+/*
+  The links arrive in sequence once the panel is open. The fixed 120ms offset
+  lets the drawer's own slide get underway first - without it the links race
+  the panel they are sitting on, which reads as two separate movements.
+*/
+.header__drawer--open .header__drawer-link {
+  opacity: 1;
+  transform: translateX(0);
+  transition-delay: calc(120ms + var(--drawer-index, 0) * 45ms);
 }
 
 .header__drawer-link:hover,
 .header__drawer-link:focus-visible {
   background-color: rgba(255, 255, 255, 0.14);
+}
+
+/*
+  The global reduced-motion block collapses transition-duration but says
+  nothing about transition-delay, so without this the links would still trickle
+  in one at a time - the stagger is the part being objected to, not its speed.
+*/
+@media (prefers-reduced-motion: reduce) {
+  .header__drawer--open .header__drawer-link {
+    transition-delay: 0s;
+  }
 }
 
 /* ==========================================================================

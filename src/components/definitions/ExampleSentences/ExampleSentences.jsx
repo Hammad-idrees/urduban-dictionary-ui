@@ -21,7 +21,12 @@ export function ExampleSentences({ examples, word, isReversed }) {
   if (!examples?.length) return null;
 
   return (
-    <section className="examples reveal" ref={revealRef} aria-labelledby="examples-title">
+    <section
+      className="examples reveal"
+      id="examples"
+      ref={revealRef}
+      aria-labelledby="examples-title"
+    >
       <h3 className="examples__title" id="examples-title">
         Examples: <span className="examples__word">{word}</span>
       </h3>

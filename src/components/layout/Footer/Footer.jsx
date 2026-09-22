@@ -1,4 +1,5 @@
 import { footerLinkColumns, socialLinks } from '../../../data/navigation';
+import { useScrollReveal } from '../../../hooks/useScrollReveal';
 import logo from '../../../assets/images/urduban-logo.png';
 import facebookIcon from '../../../assets/icons/facebook.svg';
 import instagramIcon from '../../../assets/icons/instagram.svg';
@@ -31,11 +32,23 @@ export function Footer() {
   // so the notice cannot silently go stale.
   const currentYear = new Date().getFullYear();
 
+  /*
+    One observer on the <footer> drives every block inside it, rather than four
+    separate hooks racing each other to fire. Each child carries the shared
+    `reveal` class and a --reveal-index, and the stylesheet turns that index
+    into a delay - so they arrive in reading order off a single trigger.
+
+    The threshold is lower than the hook's default because this element is far
+    taller than the sections that use it elsewhere: at 0.15 you would have
+    scrolled a good way into an empty blue band before it fired.
+  */
+  const revealRef = useScrollReveal({ threshold: 0.05 });
+
   return (
-    <footer className="footer">
+    <footer className="footer" ref={revealRef}>
       <div className="container footer__inner">
         {/* ---------- Brand column ---------- */}
-        <div className="footer__brand">
+        <div className="footer__brand reveal" style={{ '--reveal-index': 0 }}>
           {/*
             The mark sits in a link for the same reason the header's does - a
             footer brand mark is a conventional way back to the top - and
@@ -72,8 +85,17 @@ export function Footer() {
           </p>
 
           <ul className="footer__socials list-reset">
-            {socialLinks.map((social) => (
-              <li key={social.id}>
+            {socialLinks.map((social, index) => (
+              /*
+                The reveal sits on the <li> and the hover lift on the <a>, so
+                the entrance transform and the hover transform never contend
+                for the same property on the same element.
+              */
+              <li
+                className="footer__social-item reveal"
+                key={social.id}
+                style={{ '--reveal-index': index }}
+              >
                 <a
                   className="footer__social-link"
                   href={social.href}
@@ -91,10 +113,12 @@ export function Footer() {
         </div>
 
         {/* ---------- Link columns ---------- */}
-        {footerLinkColumns.map((column) => (
+        {footerLinkColumns.map((column, index) => (
           <nav
-            className="footer__column"
+            className="footer__column reveal"
             key={column.id}
+            // +1 because the brand column occupies index 0 of the stagger.
+            style={{ '--reveal-index': index + 1 }}
             /*
               Points at the visible heading instead of repeating its text in an
               aria-label, so the landmark's name and the heading can never drift
@@ -164,7 +188,7 @@ export function Footer() {
         Bottom bar: the conventional home for a copyright notice, and it gives
         the footer a base to end on rather than three columns of ragged height.
       */}
-      <div className="container footer__bottom">
+      <div className="container footer__bottom reveal" style={{ '--reveal-index': 3 }}>
         <p className="footer__copyright">
           {/* One sentence, not two - and the © symbol makes the word
               "Copyright" that the design carried redundant. */}

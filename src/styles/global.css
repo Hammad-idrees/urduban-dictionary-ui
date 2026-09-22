@@ -62,6 +62,24 @@ body {
   border-radius: 2px;
 }
 
+/* --------------------------------------------------------------------------
+   Fragment offset
+   Two sticky bars sit at the top of the page - the header, and the reading
+   progress bar directly beneath it. A jump to #some-id lands the target at
+   y=0, which is UNDERNEATH both of them.
+
+   That was worst for the skip link: the one control that exists to help
+   keyboard users was depositing them on content hidden behind the header.
+
+   Applied to every element carrying an id, because any of them can become a
+   scroll destination, and the property costs nothing on the ones that never do.
+   -------------------------------------------------------------------------- */
+[id] {
+  scroll-margin-top: calc(
+    var(--header-height) + var(--progress-height) + var(--space-md)
+  );
+}
+
 /* Lets a keyboard user jump straight past the nav to the content. */
 .skip-link {
   position: absolute;
