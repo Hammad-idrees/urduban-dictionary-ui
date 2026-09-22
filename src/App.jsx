@@ -122,9 +122,8 @@ export default function App() {
 
       <main id="main-content">
         <div className="container layout">
-          {/* Anchor target for the "Dictionary" / "Synonyms" nav links - the
-              offset that keeps it clear of the two sticky bars is the [id]
-              rule in global.css. */}
+          {/* Addressable so the entry can be linked to directly. The [id] rule
+              in global.css keeps any such jump clear of the two sticky bars. */}
           <div className="layout__main" id="definitions">
             {isLoading ? (
               <DefinitionSkeleton />

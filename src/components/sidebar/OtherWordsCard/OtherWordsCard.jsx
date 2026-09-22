@@ -14,8 +14,8 @@ import './OtherWordsCard.css';
  */
 export function OtherWordsCard({ words, onWordSelect }) {
   return (
-    // Card spreads any extra props onto its element, so the anchor target for
-    // the "Thesaurus" nav link needs no change to Card itself.
+    // Addressable so the panel can be linked to directly. Card spreads any
+    // extra props onto its element, so this needs no change to Card itself.
     <Card className="other-words" id="related-words">
       <h2 className="other-words__title">Other Words!</h2>
 
