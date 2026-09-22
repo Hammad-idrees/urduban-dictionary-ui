@@ -27,10 +27,103 @@
   gap: var(--space-sm);
 }
 
+/* ---------- Logo spotlight ----------
+   A lamp above the mark that throws a cone of light down onto it on hover.
+   -------------------------------------------------------------------------- */
+
+.footer__logo-link {
+  /* How far above the mark the lamp hangs. Declared once because the lamp's
+     offset and the beam's height are both measured from it and must agree. */
+  --beam-throw: 40px;
+
+  position: relative;
+  display: block;
+  /* Shrinks to the mark, so the beam's percentage geometry is measured against
+     the logo rather than the full width of the brand column. */
+  width: fit-content;
+  /* Moved off the <img> so the link's height is exactly the mark's height -
+     the beam's `100%` below depends on that being true. */
+  margin-bottom: var(--space-sm);
+}
+
+/*
+  The lamp. Dim rather than hidden when idle, so it reads as a fitting that is
+  switched off instead of appearing from nowhere on hover.
+*/
+.footer__lamp {
+  position: absolute;
+  top: calc(var(--beam-throw) * -1);
+  left: 50%;
+  translate: -50% 0;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-pill);
+  background-color: rgba(255, 255, 255, 0.35);
+  /* Decoration sitting over the link - it must not intercept the click. */
+  pointer-events: none;
+  transition:
+    background-color var(--duration-base) var(--ease-in-out),
+    box-shadow var(--duration-base) var(--ease-in-out);
+}
+
+/*
+  The beam: a triangle clipped out of a gradient that fades to nothing before
+  it lands, so the light falls off with distance the way real light does. The
+  mark itself is lit separately, by the filter further down.
+*/
+.footer__beam {
+  position: absolute;
+  top: calc(var(--beam-throw) * -1);
+  left: 50%;
+  translate: -50% 0;
+  /* Wider than the mark so the cone's edges clear it on both sides. */
+  width: 150%;
+  /* The throw plus the mark's own height, so the cone lands exactly on it. */
+  height: calc(var(--beam-throw) + 100%);
+  clip-path: polygon(50% 0%, 12% 100%, 88% 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.5) 0%,
+    rgba(255, 255, 255, 0.08) 55%,
+    rgba(255, 255, 255, 0) 85%
+  );
+  /*
+    The gradient is declared once and revealed with opacity. Transitioning the
+    background itself, as the original does, cannot animate - gradients are not
+    interpolatable, so the light would snap on instead of fading up.
+  */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--duration-slow) var(--ease-in-out);
+}
+
+.footer__logo-link:hover .footer__beam,
+.footer__logo-link:focus-visible .footer__beam {
+  opacity: 1;
+}
+
+/* The bloom around a lit bulb. */
+.footer__logo-link:hover .footer__lamp,
+.footer__logo-link:focus-visible .footer__lamp {
+  background-color: #ffffff;
+  box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.65);
+}
+
 .footer__logo {
+  display: block;
   width: clamp(160px, 16vw, 208px);
   height: auto;
-  margin-bottom: var(--space-sm);
+  transition: filter var(--duration-base) var(--ease-in-out);
+}
+
+/*
+  The mark is a PNG, so it cannot be recoloured the way the original recolours
+  an inline <svg> with `fill`. Brightness plus a soft white bloom is what reads
+  as "lit" on a raster image instead.
+*/
+.footer__logo-link:hover .footer__logo,
+.footer__logo-link:focus-visible .footer__logo {
+  filter: brightness(1.12) drop-shadow(0 0 10px rgba(255, 255, 255, 0.55));
 }
 
 .footer__copyright {

@@ -17,6 +17,7 @@
   --color-primary-deep: #17489a;   /* hover state - derived, not in Figma */
   --color-accent: #f8b318;         /* "TRY IT FOR FREE" CTA */
   --color-accent-dark: #e0a012;    /* accent hover - derived */
+  --color-accent-deep: #c78a0a;    /* CTA fill sweep - derived, not in Figma */
 
   --color-surface: #ffffff;
   --color-surface-muted: #f2f2f2;  /* search button background */

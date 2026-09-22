@@ -30,14 +30,30 @@ export function Footer() {
       <div className="container footer__inner">
         {/* ---------- Brand column ---------- */}
         <div className="footer__brand">
-          <img
-            className="footer__logo"
-            src={logo}
-            alt="Urduban"
-            width="208"
-            height="54"
-            loading="lazy"
-          />
+          {/*
+            The mark sits in a link for the same reason the header's does - a
+            footer brand mark is a conventional way back to the top - and
+            because the spotlight below is a hover effect: on a static <img> a
+            keyboard user could never trigger it at all.
+          */}
+          <a className="footer__logo-link" href="#home" aria-label="Urduban home">
+            {/*
+              The lamp and its beam. Both are pure decoration - one is the
+              light source, the other the cone it throws - so neither is
+              exposed to assistive technology.
+            */}
+            <span className="footer__lamp" aria-hidden="true" />
+            <span className="footer__beam" aria-hidden="true" />
+
+            <img
+              className="footer__logo"
+              src={logo}
+              alt="Urduban"
+              width="208"
+              height="54"
+              loading="lazy"
+            />
+          </a>
 
           <p className="footer__copyright">&copy; {currentYear} Copyright: Urduban</p>
           <p className="footer__copyright">All Rights Reserved.</p>

@@ -116,6 +116,24 @@
 /* ---------- Call to action ---------- */
 
 .promo__cta {
+  /*
+    Local timing for the fill sweep. It is deliberately slower than
+    --duration-slow: the circle has to travel the full width of the button, and
+    at that distance 450ms reads as a flicker rather than a sweep.
+  */
+  --cta-sweep: 600ms;
+
+  position: relative;
+  /*
+    Creates a stacking context so the ::before below stays contained. A
+    negative z-index otherwise escapes to the nearest ancestor that has one,
+    which would paint the circle behind the whole sidebar instead of behind
+    this button's label. `position: relative` alone does NOT create one.
+  */
+  isolation: isolate;
+  /* Clips the expanding circle to the button's rounded rectangle. */
+  overflow: hidden;
+
   display: block;
   padding: var(--space-md);
   background-color: var(--color-accent);
@@ -129,17 +147,65 @@
   letter-spacing: 0.02em;
   border-radius: var(--radius-sm);
   transition:
-    background-color var(--duration-fast) var(--ease-in-out),
+    box-shadow var(--duration-base) var(--ease-out),
+    scale var(--duration-base) var(--ease-out),
     transform var(--duration-base) var(--ease-out);
+}
+
+/*
+  The hover fill: a circle parked at the centre at scale 0 that expands past
+  the edges, so the deeper amber arrives as a sweep out of the middle instead
+  of a flat cross-fade.
+
+  Within a stacking context the element's own background paints first, then
+  negative-z children, then inline content - so z-index: -1 lands the circle
+  above the button's amber but below its label, which is what keeps the text
+  readable while the fill passes underneath it.
+*/
+.promo__cta::before {
+  content: '';
+  position: absolute;
+  /* inset + margin:auto centres the circle; the height comes from
+     aspect-ratio, so there is no fixed size to keep in sync. */
+  inset: 0;
+  margin: auto;
+  /* Sized from the button rather than a fixed pixel value, so a single scale
+     figure covers the full width at every breakpoint. */
+  width: 100%;
+  aspect-ratio: 1;
+  /* 50%, not `inherit` - inheriting the button's 5px would grow a rounded
+     square rather than a circle. */
+  border-radius: 50%;
+  background-color: var(--color-accent-deep);
+  z-index: -1;
+  scale: 0;
+  transition: scale var(--cta-sweep) var(--ease-out);
+}
+
+.promo__cta:hover::before,
+.promo__cta:focus-visible::before {
+  /* Overshoots 1 because the circle is only as wide as the button, so it still
+     has to grow past that to reach the two far corners. */
+  scale: 1.4;
 }
 
 .promo__cta:hover,
 .promo__cta:focus-visible {
-  background-color: var(--color-accent-dark);
+  /*
+    `scale` and `transform` are separate properties, so they compose rather
+    than overwrite - the grow and the lift can be declared independently
+    without repeating one inside the other.
+
+    1.02 rather than the 1.1 a small inline button would take: this CTA is as
+    wide as the sidebar, where 10% would visibly barge out past the card edges.
+  */
+  scale: 1.02;
   transform: translateY(-2px);
+  box-shadow: 0 0 20px rgba(248, 179, 24, 0.45);
 }
 
-/* Presses in on click, so the button feels physical. */
+/* Presses back in on click, so the button feels physical. */
 .promo__cta:active {
+  scale: 1;
   transform: translateY(0);
 }
