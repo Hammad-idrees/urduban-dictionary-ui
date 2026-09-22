@@ -5,12 +5,23 @@
 .footer {
   background-color: var(--color-primary);
   color: var(--color-text-invert);
-  padding-block: clamp(var(--space-xl), 5vw, var(--space-3xl));
+  /*
+    Top and bottom are no longer symmetrical. The generous block padding was
+    sized for a footer that ENDED on the columns; now the bottom bar supplies
+    the tail, and keeping it on both sides just leaves a wide empty band under
+    the copyright.
+
+    The bottom value roughly mirrors the bar's own padding-top, so the notice
+    sits evenly between the rule above it and the edge of the page below.
+  */
+  padding-top: clamp(var(--space-xl), 5vw, var(--space-3xl));
+  padding-bottom: clamp(var(--space-md), 2vw, var(--space-lg));
 }
 
 /*
   Three columns on desktop. The brand column is wider (1.4fr) because it holds
-  the logo and two lines of copyright, while the link columns only hold text.
+  the mark and a line of running prose, while the link columns hold only short
+  labels that would leave the extra width empty.
 */
 .footer__inner {
   display: grid;
@@ -126,10 +137,16 @@
   filter: brightness(1.12) drop-shadow(0 0 10px rgba(255, 255, 255, 0.55));
 }
 
-.footer__copyright {
-  font-size: var(--fs-copyright);
-  font-weight: var(--fw-bold);
-  line-height: var(--lh-tight);
+/*
+  Stands in for the copyright lines that moved to the bottom bar, and says what
+  the site actually is. Capped in ch rather than px so the measure stays the
+  same number of characters as the fluid type scales.
+*/
+.footer__tagline {
+  max-width: 34ch;
+  font-size: var(--fs-banner);
+  line-height: var(--lh-body);
+  opacity: 0.85;
 }
 
 .footer__socials {
@@ -164,6 +181,21 @@
 }
 
 /* ---------- Link columns ---------- */
+
+/*
+  An "eyebrow" label rather than a heading that competes with its own links:
+  smaller than them, but uppercase, tracked and slightly dimmed, which reads as
+  a category marker instead of an item in the list. Tracking is added because
+  capitals lose the word-shape that normally separates them.
+*/
+.footer__column-title {
+  margin-bottom: var(--space-md);
+  font-size: var(--fs-footer-title);
+  font-weight: var(--fw-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.65;
+}
 
 .footer__links {
   display: flex;
@@ -204,24 +236,52 @@
   margin-bottom: var(--space-sm);
 }
 
-.footer__apps-icons {
+.footer__apps-badges {
   display: flex;
   align-items: center;
-  gap: var(--space-md);
+  gap: var(--space-sm);
+  /* The badges are far wider than the glyphs they replaced, so they stack once
+     the column can no longer seat both on one row. */
+  flex-wrap: wrap;
 }
 
-.footer__apps-icons a {
+.footer__apps-badge {
+  display: block;
   transition: transform var(--duration-base) var(--ease-out);
 }
 
-.footer__apps-icons a:hover,
-.footer__apps-icons a:focus-visible {
-  transform: translateY(-3px) scale(1.06);
+.footer__apps-badge:hover,
+.footer__apps-badge:focus-visible {
+  transform: translateY(-3px) scale(1.04);
 }
 
-.footer__apps-icons img {
+.footer__apps-badge img {
+  /* Height-driven so the two match optically despite their differing widths -
+     the same treatment the sidebar's AppDownloadCard uses. */
+  height: clamp(34px, 2.6vw, 44px);
   width: auto;
-  height: clamp(34px, 3vw, 48px);
+}
+
+/* ---------- Bottom bar ---------- */
+
+.footer__bottom {
+  /* Pulls clear of the columns above before the rule is drawn, so the line
+     reads as a base under the whole block rather than a divider inside it. */
+  margin-top: clamp(var(--space-xl), 4vw, var(--space-2xl));
+  padding-top: var(--space-md);
+  /* A hairline in the text colour at low alpha, so it works on the blue
+     without introducing another token. */
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+  text-align: center;
+}
+
+.footer__copyright {
+  font-size: var(--fs-copyright);
+  /* Regular, not bold: a legal notice is the last thing on the page that should
+     compete for attention. */
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-body);
+  opacity: 0.75;
 }
 
 /* ==========================================================================
@@ -241,13 +301,12 @@
 }
 
 /*
-  Mobile: the brand centres, but the two link columns deliberately STAY side by
-  side (inherited from the rule above).
+  Mobile: the brand centres, but the two link columns stay side by side
+  (inherited from the rule above).
 
-  Collapsing them into one stack is what looked disorganised: the column
-  headings are screen-reader-only, so the grid is the ONLY thing marking where
-  "Explore" ends and "Company" begins. Flattened and centred, the nine links
-  read as one long undifferentiated list.
+  The visible column headings now mark where "Explore" ends and "Company"
+  begins, so the grid is no longer the only thing carrying that split - but two
+  columns still beat one nine-item stack for scanning, so the pairing stays.
 */
 @media (max-width: 600px) {
   .footer__inner {
@@ -256,13 +315,17 @@
     gap: var(--space-lg) var(--space-md);
   }
 
-  /* Only the brand centres - logo, copyright and socials are a symmetrical
+  /* Only the brand centres - logo, tagline and socials are a symmetrical
      block, so centring reads as deliberate there. The links stay left-aligned:
      centring labels of differing lengths leaves a ragged edge on both sides,
      which is what makes two narrow columns bleed into each other. */
   .footer__brand {
     align-items: center;
     text-align: center;
+    margin-bottom: var(--space-sm);
+  }
+
+  .footer__column-title {
     margin-bottom: var(--space-sm);
   }
 
@@ -287,7 +350,9 @@
     margin-top: var(--space-md);
   }
 
-  .footer__apps-icons {
-    gap: var(--space-sm);
+  /* At this width the column cannot seat both badges on one row, so they stack
+     - the tighter gap keeps that stack from looking loose. */
+  .footer__apps-badges {
+    gap: var(--space-xs);
   }
 }

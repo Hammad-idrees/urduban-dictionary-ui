@@ -4,8 +4,14 @@ import facebookIcon from '../../../assets/icons/facebook.svg';
 import instagramIcon from '../../../assets/icons/instagram.svg';
 import youtubeIcon from '../../../assets/icons/youtube.svg';
 import twitterIcon from '../../../assets/icons/twitter.svg';
-import androidIcon from '../../../assets/icons/android.png';
-import appleIcon from '../../../assets/icons/apple.png';
+/*
+  The same official store artwork the sidebar's AppDownloadCard uses. The page
+  previously carried two different treatments of one call to action - bare
+  platform glyphs here, real badges there - which read as an oversight rather
+  than a choice.
+*/
+import googlePlayBadge from '../../../assets/images/badge-google-play.png';
+import appStoreBadge from '../../../assets/images/badge-app-store.svg';
 import './Footer.css';
 
 /**
@@ -55,8 +61,15 @@ export function Footer() {
             />
           </a>
 
-          <p className="footer__copyright">&copy; {currentYear} Copyright: Urduban</p>
-          <p className="footer__copyright">All Rights Reserved.</p>
+          {/*
+            Takes the place of the two copyright lines that moved down to the
+            bottom bar. Without it this column is a logo and four icons, and
+            sits visibly shorter than the two beside it. The wording is the
+            site's own meta description from index.html, not new copy.
+          */}
+          <p className="footer__tagline">
+            English to Urdu dictionary, thesaurus, synonyms and antonyms.
+          </p>
 
           <ul className="footer__socials list-reset">
             {socialLinks.map((social) => (
@@ -79,8 +92,27 @@ export function Footer() {
 
         {/* ---------- Link columns ---------- */}
         {footerLinkColumns.map((column) => (
-          <nav className="footer__column" key={column.id} aria-label={column.title}>
-            <h2 className="visually-hidden">{column.title}</h2>
+          <nav
+            className="footer__column"
+            key={column.id}
+            /*
+              Points at the visible heading instead of repeating its text in an
+              aria-label, so the landmark's name and the heading can never drift
+              apart. While the heading was screen-reader-only, aria-label was
+              the only option.
+            */
+            aria-labelledby={`footer-${column.id}-title`}
+          >
+            {/*
+              Now visible. These headings were the only thing distinguishing the
+              two link groups, and hiding them meant the layout alone had to
+              carry that job - which is exactly what broke when the columns
+              collapsed on mobile.
+            */}
+            <h2 className="footer__column-title" id={`footer-${column.id}-title`}>
+              {column.title}
+            </h2>
+
             <ul className="footer__links list-reset">
               {column.links.map((link) => (
                 <li key={link.label}>
@@ -99,18 +131,45 @@ export function Footer() {
             {column.id === 'company' && (
               <div className="footer__apps">
                 <p className="footer__apps-title">Download Our Mobile App:</p>
-                <div className="footer__apps-icons">
-                  <a href="#android" aria-label="Get Urduban on Google Play">
-                    <img src={androidIcon} alt="" width="48" height="48" loading="lazy" />
+                <div className="footer__apps-badges">
+                  {/*
+                    The badges are official store artwork that already reads
+                    "Get it on Google Play", so the label names the destination
+                    rather than repeating the image's own wording. The
+                    width/height carry each badge's true intrinsic ratio.
+                  */}
+                  <a
+                    className="footer__apps-badge"
+                    href="#android"
+                    aria-label="Download Urduban on Google Play"
+                  >
+                    <img src={googlePlayBadge} alt="" width="168" height="50" loading="lazy" />
                   </a>
-                  <a href="#ios" aria-label="Get Urduban on the App Store">
-                    <img src={appleIcon} alt="" width="42" height="48" loading="lazy" />
+
+                  <a
+                    className="footer__apps-badge"
+                    href="#ios"
+                    aria-label="Download Urduban on the App Store"
+                  >
+                    <img src={appStoreBadge} alt="" width="150" height="50" loading="lazy" />
                   </a>
                 </div>
               </div>
             )}
           </nav>
         ))}
+      </div>
+
+      {/*
+        Bottom bar: the conventional home for a copyright notice, and it gives
+        the footer a base to end on rather than three columns of ragged height.
+      */}
+      <div className="container footer__bottom">
+        <p className="footer__copyright">
+          {/* One sentence, not two - and the © symbol makes the word
+              "Copyright" that the design carried redundant. */}
+          &copy; {currentYear} Urduban. All rights reserved.
+        </p>
       </div>
     </footer>
   );

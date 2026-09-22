@@ -7,7 +7,7 @@
   position: sticky;
   /* Sits directly under the sticky header so the two never overlap. */
   top: var(--header-height);
-  z-index: var(--z-dropdown);
+  z-index: var(--z-progress);
   height: 8px;
   background-color: var(--color-track);
 }

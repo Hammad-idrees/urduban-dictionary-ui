@@ -48,7 +48,11 @@
   --fs-card-title: clamp(1.125rem, 1rem + 0.45vw, 1.625rem);  /* -> 26px */
   --fs-list: clamp(1rem, 0.9rem + 0.45vw, 1.5rem);            /* -> 24px */
   --fs-footer-link: clamp(1rem, 0.9rem + 0.45vw, 1.5rem);     /* -> 24px */
-  --fs-copyright: clamp(1.125rem, 1rem + 0.55vw, 1.75rem);    /* -> 28px */
+  /* Figma put the copyright at 28px inside the brand column. It now sits in a
+     bottom bar under a rule, where a 28px bold line shouts over the content
+     above it - this is the quieter size that role calls for. */
+  --fs-copyright: clamp(0.875rem, 0.82rem + 0.22vw, 1.125rem); /* -> 18px */
+  --fs-footer-title: clamp(0.8125rem, 0.76rem + 0.22vw, 1rem); /* -> 16px */
   --fs-input: clamp(1rem, 0.94rem + 0.25vw, 1.375rem);        /* -> 22px */
   --fs-banner: clamp(1rem, 0.94rem + 0.25vw, 1.25rem);        /* -> 20px */
   --fs-cta: clamp(1rem, 0.9rem + 0.45vw, 1.5rem);             /* -> 24px */
@@ -72,7 +76,17 @@
   --container-max: 1640px;
   --container-pad: clamp(1rem, 4vw, 140px);
   --sidebar-width: 454px;   /* fixed width of the right-hand ad/word rail */
-  --header-height: 80px;
+  /*
+    80px is the Figma value, but it is a DESKTOP figure - held at that on a
+    phone it eats a fifth of the viewport before the browser's own chrome is
+    counted. 56px is the long-standing mobile app-bar height and still clears
+    the 44px tap target inside it.
+
+    Everything that has to line up with the header reads this one token - the
+    sticky progress bar, the drawer's top inset, the sticky sidebar - so the
+    four of them stay in agreement at every width for free.
+  */
+  --header-height: clamp(56px, 7vw, 80px);
   --column-gap: clamp(1.5rem, 3vw, 4rem);
 
   /* ---------- Borders & radii ---------- */
@@ -95,11 +109,21 @@
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);  /* symmetric - toggles */
 
   /* ---------- Stacking order ----------
-     Kept in one place so z-index values are comparable instead of a guess. */
+     Kept in one place so z-index values are comparable instead of a guess.
+     Listed in paint order, lowest first - the order below IS the contract. */
   --z-base: 1;
-  --z-dropdown: 50;
-  --z-header: 100;
-  --z-backdrop: 150;
-  --z-drawer: 200;
-  --z-toTop: 250;
+  /*
+    The sticky reading bar. It needs to clear ordinary page content, but it must
+    stay UNDER any menu that opens across it - it shared --z-dropdown until the
+    search suggestions, which are rendered earlier in the document, lost the
+    resulting z-index tie on DOM order and were sliced in half by it.
+  */
+  --z-progress: 40;
+  --z-dropdown: 50;     /* language + search menus - must outrank --z-progress */
+  --z-toTop: 90;        /* floats over the page, but must sit UNDER an overlay */
+  --z-backdrop: 100;    /* dims the page behind the mobile drawer */
+  --z-drawer: 150;
+  --z-header: 200;      /* above both, so the hamburger stays lit and clickable
+                           while the drawer it controls is open */
+  --z-skip: 300;        /* the skip link has to clear everything, header included */
 }

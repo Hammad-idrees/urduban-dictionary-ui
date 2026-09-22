@@ -67,7 +67,7 @@ body {
   position: absolute;
   top: var(--space-xs);
   left: var(--space-xs);
-  z-index: var(--z-drawer);
+  z-index: var(--z-skip);
   padding: var(--space-xs) var(--space-sm);
   background-color: var(--color-surface);
   color: var(--color-primary);

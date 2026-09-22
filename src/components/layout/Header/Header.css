@@ -31,8 +31,13 @@
 }
 
 .header__logo img {
-  /* Width is capped rather than fixed so the logo shrinks on narrow phones. */
-  width: clamp(140px, 14vw, 208px);
+  /*
+    The 14vw preferred term only overtakes the floor above ~860px, so every
+    phone width lands on the minimum - which makes that floor, not the vw, the
+    number that matters here. 140px was 39% of a 360px viewport; 120px brings
+    it to a third and still leaves the wordmark legible at 31px tall.
+  */
+  width: clamp(120px, 14vw, 208px);
   height: auto;
 }
 
@@ -91,6 +96,27 @@
   width: 44px;  /* 44px is the minimum comfortable touch target */
   height: 44px;
   padding: var(--space-xs);
+  /*
+    Pulls the button's own padding back out to the container gutter so the BARS
+    line up with the edge the logo starts from, rather than sitting 8px inside
+    it. The 44px tap target is unaffected.
+  */
+  margin-right: calc(var(--space-xs) * -1);
+
+  /*
+    The drawer and backdrop are rendered INSIDE .header, and .header is its own
+    stacking context (position: sticky + z-index). Their z-index values are
+    therefore measured against THIS BUTTON, not against the page - and .header's
+    own z-index does nothing to order its own children.
+
+    Within that context a positioned descendant with a positive z-index always
+    paints above a non-positioned one, so an unpositioned button loses to the
+    drawer no matter what the global scale says. Positioning it and stepping one
+    above the drawer is what keeps the close control on top of the panel it
+    closes. calc() rather than a literal, so the two cannot drift apart.
+  */
+  position: relative;
+  z-index: calc(var(--z-drawer) + 1);
 }
 
 .header__bar {
@@ -122,7 +148,14 @@
 
 /* ---------- Drawer + backdrop ---------- */
 
+/*
+  Both the backdrop and the drawer are display:none outside the mobile
+  breakpoint, so neither can be left stranded on screen if the viewport is
+  resized past it. The JS closes the drawer on that transition too; this is the
+  belt to that pair of braces.
+*/
 .header__backdrop {
+  display: none;
   position: fixed;
   inset: 0;
   z-index: var(--z-backdrop);
@@ -141,18 +174,27 @@
 }
 
 .header__drawer {
+  display: none;
   position: fixed;
   top: 0;
   right: 0;
   z-index: var(--z-drawer);
-  width: min(80vw, 320px);
+  width: min(78vw, 300px);
   height: 100dvh; /* dvh accounts for mobile browser chrome that hides on scroll */
-  padding: calc(var(--header-height) + var(--space-lg)) var(--space-lg) var(--space-lg);
+  /*
+    The top inset clears the header, which deliberately sits ABOVE this panel so
+    the hamburger stays reachable to close it. --space-md past that keeps the
+    first link off the seam where the two blues meet.
+  */
+  padding: calc(var(--header-height) + var(--space-md)) var(--space-md) var(--space-xl);
   background-color: var(--color-primary-dark);
   /* Parked off-screen instead of display:none so it can slide. */
   transform: translateX(100%);
   transition: transform var(--duration-base) var(--ease-out);
   overflow-y: auto;
+  /* Stops a scroll gesture that reaches the end of this list from chaining
+     through to the page behind it. */
+  overscroll-behavior: contain;
 }
 
 .header__drawer--open {
@@ -162,14 +204,22 @@
 .header__drawer-list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-xs);
+  /* Tight, because each link already carries 16px of its own padding - the two
+     together read as one evenly spaced list rather than a gappy one. */
+  gap: var(--space-2xs);
 }
 
 .header__drawer-link {
   display: block;
-  padding: var(--space-sm) var(--space-xs);
+  /* Even padding on all four sides, so the hover highlight sits as a balanced
+     block instead of a wide thin bar. */
+  padding: var(--space-sm);
   border-radius: var(--radius-sm);
   color: var(--color-text-invert);
+  /*
+    Not --fs-nav: that token is tuned for six links sharing one horizontal bar
+    and bottoms out near 15px, which is too small for a full-width tap target.
+  */
   font-size: 1.125rem;
   font-weight: var(--fw-bold);
   transition: background-color var(--duration-fast) var(--ease-in-out);
@@ -183,6 +233,8 @@
 /* ==========================================================================
    Breakpoints
    The nav collapses when six bold links can no longer sit beside the logo.
+   Keep the 900px figure in step with the media query in Header.jsx, which is
+   the one place these two files have to agree.
    ========================================================================== */
 
 @media (max-width: 900px) {
@@ -192,5 +244,10 @@
 
   .header__toggle {
     display: flex;
+  }
+
+  .header__backdrop,
+  .header__drawer {
+    display: block;
   }
 }

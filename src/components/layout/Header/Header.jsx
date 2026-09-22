@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { mainNavLinks } from '../../../data/navigation';
+import { useMediaQuery } from '../../../hooks/useMediaQuery';
 import logo from '../../../assets/images/urduban-logo.png';
 import './Header.css';
 
@@ -13,8 +14,24 @@ import './Header.css';
  */
 export function Header() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const toggleRef = useRef(null);
 
   const closeDrawer = () => setIsDrawerOpen(false);
+
+  /*
+    The drawer only exists below the nav breakpoint. Without this, opening it on
+    a phone and then rotating to landscape - or dragging a desktop window back
+    up past 900px - would leave the panel on screen and the body still scroll
+    locked, with the hamburger that closes it already hidden by the media query.
+
+    The 901px here is the inverse of the 900px breakpoint in Header.css; those
+    two values are the one thing the stylesheet and this file must agree on.
+  */
+  const isDesktop = useMediaQuery('(min-width: 901px)');
+
+  useEffect(() => {
+    if (isDesktop) closeDrawer();
+  }, [isDesktop]);
 
   // While the drawer is open, stop the page behind it from scrolling.
   // Without this, scrolling over the overlay moves the document underneath.
@@ -23,6 +40,26 @@ export function Header() {
 
     // Runs on unmount too, so the class can never be left stranded on <body>.
     return () => document.body.classList.remove('no-scroll');
+  }, [isDrawerOpen]);
+
+  /*
+    Hands focus back to the hamburger when the drawer closes, so a keyboard user
+    resumes at the control they used rather than being dropped at the top of the
+    document.
+
+    The ref guard matters: without it this would fire on the very first render,
+    where the drawer is merely "not open yet" rather than "just closed", and
+    steal focus from the page on load.
+  */
+  const hasOpened = useRef(false);
+
+  useEffect(() => {
+    if (isDrawerOpen) {
+      hasOpened.current = true;
+      return;
+    }
+
+    if (hasOpened.current) toggleRef.current?.focus();
   }, [isDrawerOpen]);
 
   // Escape is the expected way out of any overlay.
@@ -63,6 +100,7 @@ export function Header() {
         */}
         <button
           type="button"
+          ref={toggleRef}
           className={`header__toggle ${isDrawerOpen ? 'header__toggle--open' : ''}`}
           aria-expanded={isDrawerOpen}
           aria-controls="mobile-drawer"
