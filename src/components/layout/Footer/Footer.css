@@ -240,32 +240,54 @@
   }
 }
 
-/* Mobile: a single centred stack. */
+/*
+  Mobile: the brand centres, but the two link columns deliberately STAY side by
+  side (inherited from the rule above).
+
+  Collapsing them into one stack is what looked disorganised: the column
+  headings are screen-reader-only, so the grid is the ONLY thing marking where
+  "Explore" ends and "Company" begins. Flattened and centred, the nine links
+  read as one long undifferentiated list.
+*/
 @media (max-width: 600px) {
   .footer__inner {
-    grid-template-columns: 1fr;
-    justify-items: center;
-    text-align: center;
+    /* Tighter than --column-gap, which is sized for full-width desktop columns
+       and would eat horizontal room the labels need at this size. */
+    gap: var(--space-lg) var(--space-md);
   }
 
+  /* Only the brand centres - logo, copyright and socials are a symmetrical
+     block, so centring reads as deliberate there. The links stay left-aligned:
+     centring labels of differing lengths leaves a ragged edge on both sides,
+     which is what makes two narrow columns bleed into each other. */
   .footer__brand {
     align-items: center;
-    margin-bottom: var(--space-md);
+    text-align: center;
+    margin-bottom: var(--space-sm);
   }
 
   .footer__links {
-    align-items: center;
+    gap: var(--space-xs);
   }
 
-  .footer__apps {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  /* The inward nudge reads as misalignment once the column is centred. */
+  /* The inward nudge needs somewhere to move to, which a half-width column
+     does not have - it just reads as a misaligned label. */
   .footer__link:hover,
   .footer__link:focus-visible {
     transform: none;
+  }
+
+  /* Wraps to two or three lines in a narrow column, so it is stepped down a
+     little to keep that to a minimum. */
+  .footer__apps-title {
+    font-size: 0.9375rem;
+  }
+
+  .footer__apps {
+    margin-top: var(--space-md);
+  }
+
+  .footer__apps-icons {
+    gap: var(--space-sm);
   }
 }
