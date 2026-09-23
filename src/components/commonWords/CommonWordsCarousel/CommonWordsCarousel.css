@@ -99,6 +99,27 @@
     );
 }
 
+/*
+  A card on its way out. The slot itself is left alone - collapsing its width
+  mid-animation would change the track's total length while the paging maths is
+  still using it. The card inside shrinks away instead, and the slot goes when
+  React drops the element.
+
+  pointer-events is switched off so a card that is already leaving cannot be
+  hovered or clicked again on the way out.
+*/
+.carousel__slide--exiting {
+  pointer-events: none;
+}
+
+.carousel__slide--exiting .card {
+  opacity: 0;
+  transform: scale(0.92);
+  transition:
+    opacity 280ms var(--ease-in-out),
+    transform 280ms var(--ease-out);
+}
+
 /* ---------- Dots ---------- */
 
 .carousel__dots {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { WordCard } from '../WordCard/WordCard';
 import { useMediaQuery } from '../../../hooks/useMediaQuery';
 import { useScrollReveal } from '../../../hooks/useScrollReveal';
@@ -16,6 +16,15 @@ import './CommonWordsCarousel.css';
  * @param {object} props
  * @param {Array}  props.phrases [{ english, urdu }]
  */
+
+/*
+  How long a dismissed card is kept mounted so its exit animation can play.
+  Must stay in step with the transition on .carousel__slide--exiting .word-card
+  in the stylesheet - the JS decides WHEN the element leaves the DOM, the CSS
+  decides what it looks like on the way out.
+*/
+const EXIT_MS = 280;
+
 export function CommonWordsCarousel({ phrases }) {
   const revealRef = useScrollReveal();
 
@@ -29,13 +38,35 @@ export function CommonWordsCarousel({ phrases }) {
   const perView = isMobile ? 1 : isTablet ? 2 : 4;
 
   const [dismissedPhrases, setDismissedPhrases] = useState([]);
+  /*
+    Cards that have been dismissed but are still playing their exit animation.
+    React removes a filtered-out element from the DOM immediately, so there
+    would be nothing left to animate - the card has to stay mounted until the
+    animation has finished, and only then be committed to `dismissedPhrases`.
+  */
+  const [exitingPhrases, setExitingPhrases] = useState([]);
   const [page, setPage] = useState(0);
 
-  // A new word brings a new phrase list, so previous dismissals no longer apply.
+  // One timer per card in flight, so several can be dismissed at once and each
+  // is still cancellable on its own.
+  const exitTimers = useRef(new Map());
+
+  const clearExitTimers = () => {
+    exitTimers.current.forEach(clearTimeout);
+    exitTimers.current.clear();
+  };
+
+  // A new word brings a new phrase list, so previous dismissals no longer apply
+  // - and any exit still running belongs to cards that no longer exist.
   useEffect(() => {
+    clearExitTimers();
     setDismissedPhrases([]);
+    setExitingPhrases([]);
     setPage(0);
   }, [phrases]);
+
+  // Stops a pending timer firing into an unmounted component.
+  useEffect(() => clearExitTimers, []);
 
   const visiblePhrases = phrases.filter(
     (phrase) => !dismissedPhrases.includes(phrase.english),
@@ -56,8 +87,28 @@ export function CommonWordsCarousel({ phrases }) {
   const goToPrevious = () => setPage((current) => (current - 1 + pageCount) % pageCount);
   const goToNext = () => setPage((current) => (current + 1) % pageCount);
 
-  const dismissPhrase = (english) =>
-    setDismissedPhrases((current) => [...current, english]);
+  /*
+    Two-stage removal. Stage one marks the card as leaving, which is what plays
+    the animation; stage two actually drops it from the list once that is done.
+
+    Because an exiting card is not yet in `dismissedPhrases`, it still counts
+    towards `visiblePhrases` and therefore `pageCount` - so the paging maths
+    cannot change halfway through the animation.
+  */
+  const dismissPhrase = (english) => {
+    // A second click on a card already on its way out would queue a duplicate.
+    if (exitTimers.current.has(english)) return;
+
+    setExitingPhrases((current) => [...current, english]);
+
+    const timer = setTimeout(() => {
+      setDismissedPhrases((current) => [...current, english]);
+      setExitingPhrases((current) => current.filter((item) => item !== english));
+      exitTimers.current.delete(english);
+    }, EXIT_MS);
+
+    exitTimers.current.set(english, timer);
+  };
 
   const hasMultiplePages = pageCount > 1;
 
@@ -117,7 +168,14 @@ export function CommonWordsCarousel({ phrases }) {
             }}
           >
             {visiblePhrases.map((phrase) => (
-              <li className="carousel__slide" key={phrase.english}>
+              <li
+                className={`carousel__slide ${
+                  exitingPhrases.includes(phrase.english)
+                    ? 'carousel__slide--exiting'
+                    : ''
+                }`}
+                key={phrase.english}
+              >
                 <WordCard
                   phrase={phrase}
                   onDismiss={() => dismissPhrase(phrase.english)}

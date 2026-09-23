@@ -3,6 +3,24 @@
    Mirrors .definition so the layout does not shift when real content lands.
    ========================================================================== */
 
+/*
+  Fades in rather than cutting in. The content that replaces it fades in too,
+  via `.reveal`, so the pair reads as one thing resolving instead of two things
+  swapping - which is the whole reason the skeleton is shaped like the content.
+*/
+.definition-skeleton {
+  animation: skeleton-block-in var(--duration-base) var(--ease-out);
+}
+
+@keyframes skeleton-block-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 .definition-skeleton__block {
   padding-block: clamp(var(--space-lg), 3.5vw, var(--space-2xl));
 }
@@ -23,10 +41,12 @@
   align-items: start;
 }
 
-.definition-skeleton__lines {
+/* Same wrapping row as .definition__chips, so the placeholder occupies the
+   same number of lines the real chips will. */
+.definition-skeleton__chips {
   display: flex;
-  flex-direction: column;
-  gap: 0.55rem;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
 }
 
 /*

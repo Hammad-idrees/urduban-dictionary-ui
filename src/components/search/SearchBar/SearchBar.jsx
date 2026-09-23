@@ -131,7 +131,15 @@ export function SearchBar({ activeWord, onSearch }) {
       {showSuggestions && (
         <ul id="search-suggestions" className="search__suggestions list-reset" role="listbox">
           {suggestions.map((entry, index) => (
-            <li key={entry.id} role="option" aria-selected={index === highlightedIndex}>
+            // --suggestion-index staggers the rows in. Rows that survive a
+            // keystroke keep their key, so React reuses the node and only
+            // genuinely new rows replay the animation.
+            <li
+              key={entry.id}
+              role="option"
+              aria-selected={index === highlightedIndex}
+              style={{ '--suggestion-index': index }}
+            >
               <button
                 type="button"
                 id={`suggestion-${index}`}

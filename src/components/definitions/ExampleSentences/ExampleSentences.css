@@ -6,6 +6,18 @@
   padding-block: clamp(var(--space-lg), 3.5vw, var(--space-2xl));
 }
 
+/* Continues the definition blocks' stagger - see DefinitionSection.css, which
+   uses the same --block-index and the same 90ms step. */
+.examples.is-visible {
+  transition-delay: calc(var(--block-index, 0) * 90ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .examples.is-visible {
+    transition-delay: 0s;
+  }
+}
+
 .examples__title {
   margin-bottom: clamp(var(--space-sm), 1.5vw, var(--space-md));
   color: var(--color-primary);

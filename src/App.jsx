@@ -151,7 +151,7 @@ export default function App() {
               </div>
             ) : (
               <>
-                {entry.definitions.map((definition) => (
+                {entry.definitions.map((definition, index) => (
                   <DefinitionSection
                     // Part of speech is unique within an entry, but the word is
                     // included so React discards the old block when the word
@@ -162,6 +162,11 @@ export default function App() {
                     english={definition.english}
                     urdu={definition.urdu}
                     isReversed={isReversed}
+                    // The same handler the sidebar and the search bar use, so a
+                    // lookup behaves identically wherever it is started from.
+                    onWordSelect={handleSearch}
+                    // Position in the entrance stagger.
+                    blockIndex={index}
                   />
                 ))}
 
@@ -170,6 +175,9 @@ export default function App() {
                   examples={entry.examples}
                   word={entry.word}
                   isReversed={isReversed}
+                  // Picks up where the definition blocks left off, so the whole
+                  // article arrives as one sequence.
+                  blockIndex={entry.definitions.length}
                 />
               </>
             )}

@@ -40,19 +40,139 @@
   align-items: start;
 }
 
-.definition__text {
-  font-size: var(--fs-body);
-  line-height: var(--lh-body);
-  color: var(--color-text-soft);
+/* ==========================================================================
+   Synonym chips
+   ========================================================================== */
+
+.definition__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
 }
 
 /*
-  The Urdu column is right-aligned so the two languages read outward from the
-  centre gutter, exactly as the design lays them out. `.urdu` (global.css)
-  already supplies the font, direction and looser line-height.
+  The Urdu list also carries the global `.urdu` class, whose `direction: rtl`
+  flips the flex main axis for free - so the first translation lands on the
+  right edge, where Urdu is read from, with no extra rule here.
 */
-.definition__text--urdu {
+
+.definition__chip {
+  display: inline-block;
+  padding: var(--space-2xs) var(--space-sm);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-surface-muted);
+  /* A hairline at rest, so each chip reads as its own object against the white
+     page rather than a soft grey smudge. It is present in BOTH states, so
+     colouring it on hover cannot shift the layout by a pixel. */
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--color-text-soft);
+  /* Multi-word synonyms - "usher in", "warm reception" - must not break inside
+     their own pill; the row wraps between chips instead. */
+  white-space: nowrap;
+}
+
+.definition__chip--urdu {
   font-size: calc(var(--fs-body) * 1.08); /* Naskh runs visually smaller than Inter */
+  /* Restated because .definition__chip sets the Latin line-height above, which
+     is tight enough to clip Naskh descenders inside the pill. */
+  line-height: var(--lh-loose);
+}
+
+/*
+  Only the English chips run a lookup, so only they get an affordance. Giving
+  the Urdu chips a hover state would advertise an interaction that does not
+  exist.
+*/
+.definition__chip--action {
+  transition:
+    background-color var(--duration-fast) var(--ease-in-out),
+    border-color var(--duration-fast) var(--ease-in-out),
+    color var(--duration-fast) var(--ease-in-out),
+    box-shadow var(--duration-base) var(--ease-out),
+    transform var(--duration-base) var(--ease-out);
+}
+
+.definition__chip--action:hover,
+.definition__chip--action:focus-visible {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-text-invert);
+  transform: translateY(-2px);
+  /* Tinted with the brand blue rather than neutral black, so the chip reads as
+     lifting off the page rather than casting a grey shadow onto it. */
+  box-shadow: 0 4px 12px rgba(34, 105, 225, 0.32);
+}
+
+/* Presses back down on click, so the chip feels physical. */
+.definition__chip--action:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* ---------- Staggered entrance ----------
+   The animation is declared only once the block has been revealed. Running it
+   on mount instead would play the whole stagger behind a `.reveal` that is
+   still at opacity 0, so by the time the block scrolled into view the
+   animation would already be over and nobody would ever see it.
+
+   It lives on the <li> rather than on the chip itself so the entrance
+   transform and the hover transform never occupy the same property on the
+   same element.
+   -------------------------------------------------------------------------- */
+/*
+  Each part-of-speech block waits for the ones above it, so a new word arrives
+  in reading order instead of three blocks appearing at once. --block-index is
+  set inline by the component.
+*/
+.definition.is-visible {
+  transition-delay: calc(var(--block-index, 0) * 90ms);
+}
+
+.definition.is-visible .definition__chip-item {
+  /* `backwards` fill holds the chip at the `from` state during its delay -
+     without it every chip would sit fully visible until its turn came. */
+  animation: chip-in var(--duration-base) var(--ease-out) backwards;
+  /*
+    Two terms. The first waits out this block's own entrance - without it the
+    chips would animate behind a block that is still at opacity 0, exactly the
+    bug the `.is-visible` gate exists to avoid one level up.
+
+    The second is the chip's own position in the row. min() caps it, so the
+    11-synonym adjective list finishes in about a third of a second rather than
+    trickling in for nearly a full one.
+  */
+  animation-delay: calc(
+    var(--block-index, 0) * 90ms + min(calc(var(--chip-index) * 30ms), 360ms)
+  );
+}
+
+@keyframes chip-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/*
+  The global reduced-motion block collapses animation-duration but says nothing
+  about animation-delay, so without this the chips would still appear one after
+  another over a third of a second - the stagger itself is the part being
+  objected to, not just its speed.
+*/
+@media (prefers-reduced-motion: reduce) {
+  .definition.is-visible {
+    transition-delay: 0s;
+  }
+
+  .definition.is-visible .definition__chip-item {
+    animation-delay: 0s;
+  }
 }
 
 /* ==========================================================================
@@ -62,7 +182,7 @@
 /*
   Below tablet the two languages stack. Left-aligning the Urdu block would be
   wrong - RTL text stays right-aligned - so instead the stacked blocks get a
-  labelled divider's worth of breathing room between them.
+  divider's worth of breathing room between them.
 */
 @media (max-width: 768px) {
   .definition__columns {
@@ -70,7 +190,10 @@
     gap: var(--space-md);
   }
 
-  .definition__text--urdu {
+  /* The divider belongs to whichever column stacks SECOND, and which one that
+     is swaps when the language direction is reversed - so it is selected by
+     position rather than by language. */
+  .definition__columns > :not(:first-child) {
     padding-top: var(--space-md);
     border-top: 1px solid rgba(0, 0, 0, 0.08);
   }

@@ -93,6 +93,35 @@
   }
 }
 
+/*
+  The rows arrive in sequence behind the panel's own drop, the same way the
+  drawer links and the synonym chips do. `backwards` holds each row hidden
+  through its delay rather than showing it and then animating.
+*/
+.search__suggestions li {
+  animation: suggestion-in var(--duration-fast) var(--ease-out) backwards;
+  animation-delay: calc(var(--suggestion-index, 0) * 35ms);
+}
+
+@keyframes suggestion-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* The global reduced-motion block collapses duration but not delay, so the
+   rows would still trickle in one at a time without this. */
+@media (prefers-reduced-motion: reduce) {
+  .search__suggestions li {
+    animation-delay: 0s;
+  }
+}
+
 .search__suggestion {
   display: flex;
   align-items: center;

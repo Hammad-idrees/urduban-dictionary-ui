@@ -7,7 +7,33 @@
   top: 0;
   z-index: var(--z-header);
   background-color: var(--color-primary);
-  box-shadow: var(--shadow-header);
+  /*
+    Two shadows, and both states carry two, so the list interpolates cleanly
+    rather than snapping.
+
+    The first is a 1px hairline with no blur - a drawn EDGE, not a shadow. The
+    header and the hero below it are the same blue, so without it the two merge
+    into one band with no boundary at all.
+
+    The second is the real drop shadow, held at zero alpha here. Fading an
+    identically-shaped shadow's alpha is what makes it animate; `none` does not
+    interpolate and would snap.
+  */
+  box-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.14),
+    0 2px 25px rgba(0, 0, 0, 0);
+  transition: box-shadow var(--duration-base) var(--ease-in-out);
+}
+
+/*
+  The depth arrives only once content is actually passing underneath. At rest a
+  25px blur over the identically-coloured hero reads as a smudge rather than an
+  edge, which is what the hairline above is for.
+*/
+.header--scrolled {
+  box-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.14),
+    var(--shadow-header);
 }
 
 .header__inner {

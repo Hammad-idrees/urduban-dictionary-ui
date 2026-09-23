@@ -14,17 +14,20 @@ import './ExampleSentences.css';
  * @param {string} props.word      headword, used only for the accessible label
  * @param {boolean} props.isReversed show Urdu first when translating ur -> en
  */
-export function ExampleSentences({ examples, word, isReversed }) {
+export function ExampleSentences({ examples, word, isReversed, blockIndex = 0 }) {
   const revealRef = useScrollReveal();
 
   // Nothing to show rather than an empty heading, if an entry has no examples.
   if (!examples?.length) return null;
 
   return (
+    // The caller passes the number of definition blocks above, so this section
+    // continues the same stagger rather than restarting it.
     <section
       className="examples reveal"
       id="examples"
       ref={revealRef}
+      style={{ '--block-index': blockIndex }}
       aria-labelledby="examples-title"
     >
       <h3 className="examples__title" id="examples-title">

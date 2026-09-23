@@ -33,6 +33,26 @@ export function Header() {
     if (isDesktop) closeDrawer();
   }, [isDesktop]);
 
+  /*
+    The header and the hero band below it are the same blue, so a permanent drop
+    shadow casts a dark smudge across the hero with no edge to justify it. The
+    shadow only earns its place once there is content passing underneath.
+
+    The handler only ever sets a boolean, and React bails out of re-rendering
+    when that value is unchanged - so the work per scroll event is one property
+    read and a comparison.
+  */
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const updateScrolled = () => setIsScrolled(window.scrollY > 0);
+
+    updateScrolled(); // covers a restored scroll position on reload
+    window.addEventListener('scroll', updateScrolled, { passive: true });
+
+    return () => window.removeEventListener('scroll', updateScrolled);
+  }, []);
+
   // While the drawer is open, stop the page behind it from scrolling.
   // Without this, scrolling over the overlay moves the document underneath.
   useEffect(() => {
@@ -119,7 +139,10 @@ export function Header() {
   }, [isDrawerOpen]);
 
   return (
-    <header className="header" id="home">
+    <header
+      className={`header ${isScrolled ? 'header--scrolled' : ''}`}
+      id="home"
+    >
       <div className="container header__inner">
         <a className="header__logo" href="#home" aria-label="Urduban home">
           <img src={logo} alt="Urduban" width="208" height="54" />

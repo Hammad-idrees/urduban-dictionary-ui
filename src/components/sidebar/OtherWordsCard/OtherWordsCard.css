@@ -8,7 +8,11 @@
 }
 
 .other-words__title {
-  margin-bottom: var(--space-sm);
+  /* Inset so the rule beneath lines up with the row text, rather than running
+     edge to edge and cutting the card in two. */
+  margin: 0 var(--space-lg) var(--space-xs);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   font-size: var(--fs-card-title);
   font-weight: var(--fw-bold);
   text-align: center;
@@ -20,26 +24,56 @@
 }
 
 .other-words__item {
+  position: relative; /* anchor for the marker below */
   display: block;
   width: 100%;
-  padding: var(--space-2xs) var(--space-lg);
+  /*
+    8px of vertical padding rather than 4px. At 4px the row came to roughly
+    41px tall, just under the 44px minimum for a comfortable tap target - so
+    this is a usability fix as much as a spacing one.
+  */
+  padding: var(--space-xs) var(--space-lg);
   text-align: left;
   font-size: var(--fs-list);
   color: var(--color-text);
-  /* The row highlight is drawn with a left border that starts transparent, so
-     the text never shifts sideways when it appears. */
-  border-left: 3px solid transparent;
   transition:
     background-color var(--duration-fast) var(--ease-in-out),
-    border-color var(--duration-fast) var(--ease-in-out),
     color var(--duration-fast) var(--ease-in-out);
+}
+
+/*
+  The row marker. A pseudo-element rather than the transparent left border it
+  replaces, for two reasons: it can grow from the middle outwards instead of
+  snapping on, and it sits inside the row's height rather than spanning the
+  whole of it, which reads as a marker rather than a table rule.
+*/
+.other-words__item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  /* `translate` is its own property, so it composes with the `transform` below
+     instead of being overwritten by it. */
+  translate: 0 -50%;
+  width: 3px;
+  height: 62%;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-primary);
+  transform: scaleY(0);
+  transition: transform var(--duration-base) var(--ease-out);
 }
 
 .other-words__item:hover,
 .other-words__item:focus-visible {
-  background-color: var(--color-surface-muted);
-  border-left-color: var(--color-primary);
+  /* Tinted with the brand blue rather than a flat neutral grey, so the
+     highlight belongs to this site instead of looking like a browser default. */
+  background-color: rgba(34, 105, 225, 0.07);
   color: var(--color-primary);
+}
+
+.other-words__item:hover::before,
+.other-words__item:focus-visible::before {
+  transform: scaleY(1);
 }
 
 /* ==========================================================================

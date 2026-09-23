@@ -63,8 +63,17 @@
   inset-inline: 0;
   height: 4px;
   background-color: var(--color-primary);
-  /* Grows from the start edge on hover, echoing the nav underline. */
-  transform: scaleX(0.999);
-  transform-origin: left;
+  /*
+    The design's bar is permanent, so it stays at full width rather than growing
+    in on hover. Hover thickens it from the bottom edge instead - scaleY rather
+    than an animated height, so the browser composites it without a layout pass,
+    and because it is absolutely positioned nothing around it moves.
+  */
+  transform-origin: bottom;
   transition: transform var(--duration-base) var(--ease-out);
+}
+
+.word-card:hover .word-card__underline,
+.word-card:focus-within .word-card__underline {
+  transform: scaleY(1.75);
 }

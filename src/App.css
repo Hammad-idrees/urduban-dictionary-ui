@@ -32,8 +32,22 @@
 
 /* ---------- Empty / not-found state ---------- */
 
+/* Fades in like the skeleton it replaces, so a failed search arrives as softly
+   as a successful one. */
 .layout__empty {
   padding-block: clamp(var(--space-xl), 5vw, var(--space-3xl));
+  animation: empty-in var(--duration-base) var(--ease-out);
+}
+
+@keyframes empty-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .layout__empty-title {
